@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Esm &amp; Famil</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="usernameError">نام کاربری باید بیش از 3 کاراکتر باشد</string>
+    <string name="passwordErrorType">رمز عبور باید شامل حروف کوچک و بزرگ و عدد باشد</string>
+    <string name="passwordErrorCount">رمز عبور باید حداقل 8 کاراکتر باشد</string>
+    <string name="emailError">نشانی الکترونیکی معتبر نیست</string>
+</resources>
