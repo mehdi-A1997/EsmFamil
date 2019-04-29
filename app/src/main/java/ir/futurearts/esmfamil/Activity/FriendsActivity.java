@@ -1,33 +1,23 @@
 package ir.futurearts.esmfamil.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.livequery.ParseLiveQueryClient;
-import com.parse.livequery.SubscriptionHandling;
 import com.victor.loading.newton.NewtonCradleLoading;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,26 +27,29 @@ import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.R;
 
-public class SelectUserActivity extends AppCompatActivity implements UserInterface {
+public class FriendsActivity extends AppCompatActivity implements UserInterface {
 
     private RecyclerView list;
     private List<UserM> data;
     private UserAdapter adapter;
+    private ConstraintLayout searchbtn;
+    private ConstraintLayout requestbtn;
     private NewtonCradleLoading progress;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_user);
+        setContentView(R.layout.activity_friends);
 
-        list = findViewById(R.id.select_user_rv);
-        progress= findViewById(R.id.select_user_proress);
+        list = findViewById(R.id.frineds_rv);
+        searchbtn= findViewById(R.id.friends_add);
+        requestbtn= findViewById(R.id.friends_request);
+        progress= findViewById(R.id.friends_progress);
+        progress.start();
         data = new ArrayList<>();
         adapter = new UserAdapter(data, this,this);
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(this));
 
-        progress.start();
         ParseUser c = ParseUser.getCurrentUser();
         ParseQuery<ParseObject> q = new ParseQuery<>("Friends");
         q.whereEqualTo("Cid", c.getObjectId());
@@ -93,37 +86,11 @@ public class SelectUserActivity extends AppCompatActivity implements UserInterfa
             });
         }
         adapter.notifyDataSetChanged();
-        ParseLiveQueryClient parseLiveQueryClient = null;
-
-        try {
-            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://esmfamil.back4app.io/"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        if (parseLiveQueryClient != null) {
-            ParseQuery<ParseObject> parseQuery = new ParseQuery<>("Test");
-            SubscriptionHandling<ParseObject> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
-
-            subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-                @Override
-                public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
-                    Log.d("MM",object.getString("name"));
-
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(SelectUserActivity.this, object.getString("name"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
-                }
-            });
-        }
     }
 
     @Override
     public void userSelected(UserM u) {
-        //TODO User Selected
+        //TODO DELETE USER
+        Toast.makeText(this, "DELETE USER", Toast.LENGTH_SHORT).show();
     }
 }

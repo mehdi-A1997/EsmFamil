@@ -27,6 +27,8 @@ import com.parse.SignUpCallback;
 import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Interface.LoginInterface;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
+import ir.futurearts.esmfamil.Utils.DialogActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,16 +111,24 @@ public class LoginFragment extends Fragment {
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final CustomProgress customProgress=new CustomProgress();
+                customProgress.showProgress(getContext(),false);
                 ParseUser.logInInBackground(username.getText().toString(), password.getText().toString(), new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             Intent intent=new Intent(getContext(), MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            customProgress.hideProgress();
                             getActivity().finish();
                         } else {
+                            customProgress.hideProgress();
                             Log.d("MM",e.getMessage());
-                            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                            Intent intent=new Intent(getContext(), DialogActivity.class);
+                            intent.putExtra("type","singleE");
+                            intent.putExtra("title","خطا");
+                            intent.putExtra("text","نام کاربری یا رمز عبور نادرست است");
+                            startActivity(intent);
                         }
                     }
                 });

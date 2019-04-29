@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ir.futurearts.esmfamil.Interface.AddFriendInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
@@ -36,9 +37,11 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
     private List<UserM> data;
     private Context context;
     private Drawable defultbg=null;
-    public RankAdapter(List<UserM> data, Context context) {
+    private AddFriendInterface adi;
+    public RankAdapter(List<UserM> data, Context context,AddFriendInterface adi) {
         this.data = data;
         this.context = context;
+        this.adi=adi;
     }
 
 
@@ -152,33 +155,19 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
                         @Override
                         public void done(List<ParseObject> objects, ParseException e) {
                             if(objects.size()==0){
-                                ParseObject req=new ParseObject("FriendRequests");
-                                req.put("Cid",c.getObjectId());
-                                req.put("Uid",id);
-
-                                req.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if(e==null){
-                                            //TODO SENT
-                                            customProgress.hideProgress();
-                                            Toast.makeText(context, "Sent Succesfully", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+                                customProgress.hideProgress();
+                                adi.SendRequest(id);
                             }
                             else{
-                                //TODO ALREADY SENT
                                 customProgress.hideProgress();
-                                Toast.makeText(context, "Already Sent", Toast.LENGTH_LONG).show();
+                                adi.AlreadySent();
                             }
                         }
                     });
                 }
                 else{
-                    //TODO ALREADY FRIENDS
                     customProgress.hideProgress();
-                    Toast.makeText(context, "Already Friends", Toast.LENGTH_LONG).show();
+                    adi.AlreadyFriend();
                 }
             }
         });

@@ -18,6 +18,10 @@ import com.parse.ParseException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ir.futurearts.esmfamil.Activity.FriendsActivity;
+import ir.futurearts.esmfamil.Activity.MainActivity;
+import ir.futurearts.esmfamil.Activity.SelectUserActivity;
+import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.R;
 
@@ -25,10 +29,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
 
     private List<UserM>data;
     private Context context;
+    private UserInterface ui;
 
-    public UserAdapter(List<UserM> data, Context context) {
+    public UserAdapter(List<UserM> data, Context context,UserInterface ui) {
         this.data = data;
         this.context = context;
+        this.ui=ui;
     }
 
     @NonNull
@@ -63,7 +69,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
             online=v.findViewById(R.id.user_row_oline);
         }
 
-        public void set(UserM u){
+        public void set(final UserM u){
             uimg.setImageBitmap(null);
             uimg.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.ic_nouser));
 
@@ -87,13 +93,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
             name.setText(u.getName());
             username.setText(u.getUsername());
             score.setText(u.getScore());
-
-            v.setOnClickListener(new View.OnClickListener() {
+            if(context instanceof SelectUserActivity)
+                v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO User Selected
+                    ui.userSelected(u);
                 }
             });
+
+            if(context instanceof FriendsActivity)
+                v.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        ui.userSelected(u);
+                        return true;
+                    }
+                });
         }
     }
 }

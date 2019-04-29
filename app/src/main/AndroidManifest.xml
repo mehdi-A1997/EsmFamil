@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Utils.DialogActivity"></activity>
+        <activity android:name=".Activity.FriendsActivity"></activity>
+        <activity
+            android:name=".Utils.DialogActivity"
+            android:theme="@style/AppTheme.Dialog" />
         <activity android:name=".Activity.RankActivity" />
         <activity android:name=".Activity.LoginActivity" />
         <activity

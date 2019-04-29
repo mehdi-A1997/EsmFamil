@@ -71,12 +71,14 @@
             android:id="@+id/user_row_oline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#4CAF50"
+            android:textColor="@color/white"
+            android:background="@drawable/online_bg"
             android:text="انلاین"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:textSize="15sp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

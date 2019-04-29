@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Interface.LoginInterface;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -134,6 +135,8 @@ public class SignUpFragment extends Fragment {
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final CustomProgress customProgress=new CustomProgress();
+                customProgress.showProgress(getContext(),false);
                 ParseUser user = new ParseUser();
                 user.setUsername(username.getText().toString());
                 user.setPassword(password.getText().toString());
@@ -152,8 +155,10 @@ public class SignUpFragment extends Fragment {
                             Intent intent=new Intent(getContext(), MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            customProgress.hideProgress();
                             getActivity().finish();
                         } else {
+                            customProgress.hideProgress();
                             Log.d("MM",e.getMessage());
                             Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                         }
