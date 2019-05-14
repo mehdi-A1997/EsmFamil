@@ -3,7 +3,8 @@ package ir.futurearts.esmfamil.Utils;
 import android.app.Application;
 
 import com.parse.Parse;
-import com.parse.ParseUser;
+
+import ir.futurearts.esmfamil.Constant.CurrentUser;
 
 public class EsmFamil extends Application {
     @Override
@@ -17,11 +18,7 @@ public class EsmFamil extends Application {
                 .build()
         );
         Foreground.init(this);
-        ParseUser user=ParseUser.getCurrentUser();
-        if(user!=null){
-        user.put("online",1);
-        user.saveInBackground();
-        }
+        CurrentUser.LoadUser(this);
     }
 
 

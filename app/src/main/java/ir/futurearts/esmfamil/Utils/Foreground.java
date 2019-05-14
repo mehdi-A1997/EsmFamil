@@ -106,11 +106,7 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
 
         if (wasBackground){
             Log.i(TAG, "went foreground");
-            ParseUser user=ParseUser.getCurrentUser();
-            if(user!=null){
-                user.put("online",1);
-                user.saveInBackground();
-            }
+            //TODO USER ONLINE
             for (Listener l : listeners) {
                 try {
                     l.onBecameForeground();
@@ -137,10 +133,7 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
                     foreground = false;
                     Log.i(TAG, "went background");
                     ParseUser user=ParseUser.getCurrentUser();
-                    if(user!=null){
-                        user.put("online",0);
-                        user.saveInBackground();
-                    }
+                    //TODO USER OFFLINE
                     for (Listener l : listeners) {
                         try {
                             l.onBecameBackground();

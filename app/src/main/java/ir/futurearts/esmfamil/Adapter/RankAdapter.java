@@ -1,36 +1,21 @@
 package ir.futurearts.esmfamil.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.parse.FindCallback;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.AddFriendInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.R;
-import ir.futurearts.esmfamil.Utils.CustomProgress;
 
 public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
@@ -48,7 +33,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
     @NonNull
     @Override
     public myHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.user_row,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user,parent,false);
         return new myHolder(v);
     }
 
@@ -108,16 +93,8 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
             }
 
-            if(u.getImg()!=null){
-                u.getImg().getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, ParseException e) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        uimg.setImageDrawable(null);
-                        uimg.setImageBitmap(bitmap);
-                    }
-                });
-            }
+            //TODO SET USER IMG
+
             online.setVisibility(View.GONE);
             name.setText(u.getName());
             username.setText(u.getUsername());
@@ -133,43 +110,9 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
     }
 
     private void sendRequest(final String id) {
-        final ParseUser c=ParseUser.getCurrentUser();
 
-        if(id.equals(c.getObjectId()))
+        if(id.equals(CurrentUser.getId()))
             return;
-
-        final CustomProgress customProgress=new CustomProgress();
-        customProgress.showProgress(context,false);
-        ParseQuery<ParseObject> q1=new ParseQuery<>("Friends");
-        q1.whereEqualTo("Uid",id);
-        q1.whereEqualTo("Cid",c.getObjectId());
-
-       final ParseQuery<ParseObject> q2=new ParseQuery<>("FriendRequests");
-        q2.whereEqualTo("Cid",c.getObjectId());
-        q2.whereEqualTo("Uid",id);
-        q1.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if(objects.size()==0){
-                    q2.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> objects, ParseException e) {
-                            if(objects.size()==0){
-                                customProgress.hideProgress();
-                                adi.SendRequest(id);
-                            }
-                            else{
-                                customProgress.hideProgress();
-                                adi.AlreadySent();
-                            }
-                        }
-                    });
-                }
-                else{
-                    customProgress.hideProgress();
-                    adi.AlreadyFriend();
-                }
-            }
-        });
+        adi.SendRequest(id);
     }
 }

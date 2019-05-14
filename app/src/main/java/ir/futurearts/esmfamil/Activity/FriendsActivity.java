@@ -5,27 +5,27 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.victor.loading.newton.NewtonCradleLoading;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import ir.futurearts.esmfamil.Adapter.UserAdapter;
+import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
+import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FriendsActivity extends AppCompatActivity implements UserInterface {
 
@@ -50,30 +50,33 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(this));
 
-        ParseUser c = ParseUser.getCurrentUser();
-        ParseQuery<ParseObject> q = new ParseQuery<>("Friends");
-        q.whereEqualTo("Cid", c.getObjectId());
-        q.findInBackground(new FindCallback<ParseObject>() {
+         //TODO GET FRIENDS
+        Call<FreindsResponse> call= RetrofitClient
+                .getInstance()
+                .getApi()
+                .getFriends(CurrentUser.getId());
+
+        call.enqueue(new Callback<FreindsResponse>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                for (ParseObject p : objects) {
-                    ParseQuery<ParseUser> p1 = ParseUser.getQuery();
-                    try {
-                        final ParseUser user = p1.get(p.getString("Uid"));
-                        final UserM u = new UserM(user.getObjectId(), user.getString("name"),
-                                user.getUsername(), user.getEmail(), user.getString("score"));
-                        ParseFile img = user.getParseFile("image");
-                        u.setImg(img);
-                        u.setOnline(user.getInt("online"));
-                        data.add(u);
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+            public void onResponse(Call<FreindsResponse> call, Response<FreindsResponse> response) {
+
+                FreindsResponse fr= response.body();
+
+                for(UserM u: fr.getUsers()){
+                    data.add(u);
                 }
                 progress.stop();
                 progress.setVisibility(View.GONE);
                 adapter.notifyDataSetChanged();
                 list.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<FreindsResponse> call, Throwable t) {
+                progress.stop();
+                progress.setVisibility(View.GONE);
+                FancyToast.makeText(FriendsActivity.this, getString(R.string.systemError),
+                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
             }
         });
 
@@ -86,6 +89,20 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
             });
         }
         adapter.notifyDataSetChanged();
+
+        requestbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FriendsActivity.this, FriendRequestActivity.class));
+            }
+        });
+
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FriendsActivity.this, SearchUserActivity.class));
+            }
+        });
     }
 
     @Override

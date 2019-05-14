@@ -7,4 +7,6 @@
     <string name="passwordErrorType">رمز عبور باید شامل حروف کوچک و بزرگ و عدد باشد</string>
     <string name="passwordErrorCount">رمز عبور باید حداقل 8 کاراکتر باشد</string>
     <string name="emailError">نشانی الکترونیکی معتبر نیست</string>
+
+    <string name="systemError">خطای سیستم.مجددا تلاش کنید</string>
 </resources>

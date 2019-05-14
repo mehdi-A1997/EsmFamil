@@ -3,9 +3,6 @@ package ir.futurearts.esmfamil.Utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Window;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 import com.victor.loading.newton.NewtonCradleLoading;
 
 import ir.futurearts.esmfamil.R;

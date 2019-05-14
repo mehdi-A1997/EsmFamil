@@ -4,7 +4,6 @@ package ir.futurearts.esmfamil.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -17,18 +16,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import com.shashank.sony.fancytoastlib.FancyToast;
+
+import java.io.IOException;
 
 import ir.futurearts.esmfamil.Activity.MainActivity;
+import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.LoginInterface;
+import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
+import ir.futurearts.esmfamil.Network.Responses.LoginResponse;
+import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
 import ir.futurearts.esmfamil.Utils.DialogActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,23 +117,44 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 final CustomProgress customProgress=new CustomProgress();
                 customProgress.showProgress(getContext(),false);
-                ParseUser.logInInBackground(username.getText().toString(), password.getText().toString(), new LogInCallback() {
-                    public void done(ParseUser user, ParseException e) {
-                        if (user != null) {
-                            Intent intent=new Intent(getContext(), MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            customProgress.hideProgress();
-                            getActivity().finish();
-                        } else {
-                            customProgress.hideProgress();
-                            Log.d("MM",e.getMessage());
-                            Intent intent=new Intent(getContext(), DialogActivity.class);
-                            intent.putExtra("type","singleE");
-                            intent.putExtra("title","خطا");
-                            intent.putExtra("text","نام کاربری یا رمز عبور نادرست است");
-                            startActivity(intent);
+
+                Call<LoginResponse> call= RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .LogIn(username.getText().toString(),password.getText().toString());
+
+                call.enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        customProgress.hideProgress();
+                        if(response.code() == 200){
+                            LoginResponse lr= response.body();
+
+                            CurrentUser.SaveUser(lr.getUser());
+                            startActivity(new Intent(getActivity(), MainActivity.class));
                         }
+                        else {
+                            try {
+                                DefaultResponse er= new DefaultResponse(response.errorBody().string());
+
+                                Intent intent= new Intent(getContext(), DialogActivity.class);
+                                intent.putExtra("type", "singleE");
+                                intent.putExtra("title", "خطا");
+                                intent.putExtra("text",er.getMessage());
+
+                                startActivity(intent);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        customProgress.hideProgress();
+                        FancyToast.makeText(getContext(), getString(R.string.systemError),
+                                FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                     }
                 });
             }

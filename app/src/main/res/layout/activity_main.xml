@@ -75,7 +75,7 @@
         android:layout_marginEnd="32dp"
         android:foregroundGravity="center"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_bootomview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_uimg"
@@ -217,4 +217,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
     </ScrollView>
+
+    <ir.futurearts.esmfamil.Utils.CurvedBottomView
+        android:id="@+id/main_bootomview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_main"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

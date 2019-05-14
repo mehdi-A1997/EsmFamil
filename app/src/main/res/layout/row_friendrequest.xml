@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/user_row_card"
+    android:orientation="vertical"
+    android:id="@+id/friendrequest_row_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
@@ -14,7 +15,7 @@
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_row_img"
+            android:id="@+id/friendrequest_row_img"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="8dp"
@@ -28,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/user_row_name"
+            android:id="@+id/friendrequest_row_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/parastoo"
@@ -37,50 +38,45 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/user_row_img"
-            app:layout_constraintStart_toEndOf="@id/user_row_score"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@id/friendrequest_row_img"
             app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/user_row_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/user_row_score"
-        app:layout_constraintEnd_toStartOf="@id/user_row_img"
-        app:layout_constraintTop_toBottomOf="@id/user_row_name"
-        android:layout_marginTop="5dp"
-        android:textSize="14dp"
-        android:textColor="@color/gray"
-        android:text="m.allahyari"
-        android:textStyle="bold"
-        android:fontFamily="@font/sahel"/>
 
         <TextView
-            android:id="@+id/user_row_score"
+            android:id="@+id/friendrequest_row_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/shabnam"
-            android:text="1500"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/sahel"
+            android:text="m.allahyari"
+            android:textColor="@color/gray"
+            android:textSize="14dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <TextView
-            android:id="@+id/user_row_oline"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@id/friendrequest_row_img"
+            app:layout_constraintTop_toBottomOf="@id/friendrequest_row_name" />
+
+        <ImageView
+            android:id="@+id/friendrequest_row_ok_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:background="@drawable/online_bg"
-            android:text="انلاین"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
+            android:src="@mipmap/ic_ok"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="4dp"
-            android:textSize="15sp"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"/>
+
+        <ImageView
+            android:id="@+id/friendrequest_row_no_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_error"
+            app:layout_constraintStart_toEndOf="@id/friendrequest_row_ok_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

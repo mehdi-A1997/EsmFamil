@@ -1,73 +1,69 @@
 package ir.futurearts.esmfamil.Module;
 
-import android.graphics.Bitmap;
-
-import com.parse.ParseFile;
 
 public class UserM {
-    private String Id,Name,Username,Email,Score;
-    private ParseFile Img=null;
+    private String id, name, username, email, score, img;
     private int online;
 
-    public UserM(String id, String name, String username, String email, String score) {
-        Id = id;
-        Name = name;
-        Username = username;
-        Email = email;
-        Score = score;
+    public UserM(String id, String name, String username, String email, String score, String img, int online) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.score = score;
+        this.img = img;
+        this.online = online;
     }
-
 
     public UserM() {
     }
 
-
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getScore() {
-        return Score;
+        return score;
     }
 
     public void setScore(String score) {
-        Score = score;
+        this.score = score;
     }
 
-    public ParseFile getImg() {
-        return Img;
+    public String getImg() {
+        return img;
     }
 
-    public void setImg(ParseFile img) {
-        Img = img;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public int getOnline() {

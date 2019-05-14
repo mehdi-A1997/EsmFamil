@@ -2,25 +2,21 @@ package ir.futurearts.esmfamil.Activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
-import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import ir.futurearts.esmfamil.Adapter.RankAdapter;
+
 import ir.futurearts.esmfamil.Constant.CurrentUser;
-import ir.futurearts.esmfamil.Interface.AddFriendInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
-import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.Responses.LoginResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
@@ -30,69 +26,76 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RankActivity extends AppCompatActivity implements AddFriendInterface {
+public class SearchUserActivity extends AppCompatActivity {
 
-    private RecyclerView list;
-    private List<UserM>data;
-    private RankAdapter adapter;
-    private NewtonCradleLoading progress;
+    private EditText username;
+    private Button searchbtn;
 
-    private final int SEND_CODE=1001;
-
+    private static final int SEND_CODE= 1001;
     private String uid="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rank);
-        list=findViewById(R.id.rank_rv);
-        progress=findViewById(R.id.rank_progress);
-        data=new ArrayList<>();
-        adapter=new RankAdapter(data,this,this);
+        setContentView(R.layout.activity_search_user);
 
-        list.setAdapter(adapter);
-        list.setLayoutManager(new LinearLayoutManager(this));
+        username= findViewById(R.id.search_user_txt);
+        searchbtn= findViewById(R.id.search_user_btn);
 
-        progress.start();
 
-        Call<FreindsResponse> call= RetrofitClient
-                .getInstance()
-                .getApi()
-                .getRank();
-
-        call.enqueue(new Callback<FreindsResponse>() {
+        searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<FreindsResponse> call, Response<FreindsResponse> response) {
-
-                FreindsResponse fr= response.body();
-                Log.d("MM",fr.getMessage());
-                Log.d("MM",fr.getUsers().size()+"");
-                for(UserM u: fr.getUsers()){
-                    data.add(u);
+            public void onClick(View v) {
+                if(username.getText().toString().length()<3) {
+                    username.setError(getString(R.string.usernameError));
+                    return;
                 }
-                progress.stop();
-                progress.setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
-                list.setVisibility(View.VISIBLE);
-            }
+                if(username.equals(CurrentUser.getUsername())){
+                    username.setError("نام کاربری خود را وارد کردید :|");
+                    return;
+                }
 
-            @Override
-            public void onFailure(Call<FreindsResponse> call, Throwable t) {
-                progress.stop();
-                progress.setVisibility(View.GONE);
-                FancyToast.makeText(RankActivity.this, getString(R.string.systemError),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                final CustomProgress customProgress= new CustomProgress();
+                customProgress.showProgress(SearchUserActivity.this, false);
+
+                Call<LoginResponse> call= RetrofitClient.getInstance()
+                        .getApi().searchUser(username.getText().toString());
+
+                call.enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        LoginResponse lr= response.body();
+                        customProgress.hideProgress();
+                        if(lr.getUser().getUsername()!= null){
+                            SendRequest(lr.getUser());
+                        }
+                        else {
+                            Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
+                            intent.putExtra("type","singleE");
+                            intent.putExtra("title","پیام");
+                            intent.putExtra("text","کاربر یافت نشد");
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        customProgress.hideProgress();
+                        FancyToast.makeText(SearchUserActivity.this, getString(R.string.systemError),
+                                FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    }
+                });
+
             }
         });
     }
 
-
-    @Override
-    public void SendRequest(String id) {
-        uid=id;
-        Intent intent=new Intent(RankActivity.this, DialogActivity.class);
+    public void SendRequest(UserM u) {
+        uid=u.getId();
+        Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
         intent.putExtra("type","success");
         intent.putExtra("title","سوال");
-        intent.putExtra("text","مایل به اضافه کردن به لیست دوستان هستید؟");
+        intent.putExtra("text","مایل به ارسال درخواست به "+u.getName()+" هستید؟");
         startActivityForResult(intent,SEND_CODE);
     }
 
@@ -103,7 +106,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
         if(requestCode==SEND_CODE){
             if(resultCode==RESULT_OK){
                 final CustomProgress customProgress=new CustomProgress();
-                customProgress.showProgress(RankActivity.this,false);
+                customProgress.showProgress(SearchUserActivity.this,false);
 
                 Call<ResponseBody> call= RetrofitClient
                         .getInstance()
@@ -118,7 +121,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
                             try {
                                 DefaultResponse dr = new DefaultResponse(response.body().string());
 
-                                Intent intent=new Intent(RankActivity.this, DialogActivity.class);
+                                Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
                                 intent.putExtra("type","singleS");
                                 intent.putExtra("title","پیام");
                                 intent.putExtra("text",dr.getMessage());
@@ -134,7 +137,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
                             try {
                                 DefaultResponse dr = new DefaultResponse(response.body().string());
 
-                                Intent intent=new Intent(RankActivity.this, DialogActivity.class);
+                                Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
                                 intent.putExtra("type","singleE");
                                 intent.putExtra("title","پیام");
                                 intent.putExtra("text",dr.getMessage());
@@ -150,7 +153,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         customProgress.hideProgress();
-                        FancyToast.makeText(RankActivity.this, getString(R.string.systemError),
+                        FancyToast.makeText(SearchUserActivity.this, getString(R.string.systemError),
                                 FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                     }
                 });

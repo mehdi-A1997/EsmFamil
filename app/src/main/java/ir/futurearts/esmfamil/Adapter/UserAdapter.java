@@ -1,8 +1,6 @@
 package ir.futurearts.esmfamil.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
-
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.FriendsActivity;
-import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Activity.SelectUserActivity;
 import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
@@ -40,7 +33,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
     @NonNull
     @Override
     public myHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.user_row,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user,parent,false);
         return new myHolder(v);
     }
 
@@ -73,16 +66,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
             uimg.setImageBitmap(null);
             uimg.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.ic_nouser));
 
-            if(u.getImg()!=null){
-                u.getImg().getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, ParseException e) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        uimg.setImageDrawable(null);
-                        uimg.setImageBitmap(bitmap);
-                    }
-                });
-            }
+            //TODO SET USER IMG
 
             if(u.getOnline()!=1){
                 online.setVisibility(View.GONE);
