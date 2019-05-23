@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface API {
+public interface UserAPI {
 
     //SignUp User
 
@@ -36,26 +36,26 @@ public interface API {
 
     //Get getFriends
 
-    @GET("friends/{id}")
+    @GET("user.php/friends/{id}")
     Call<FreindsResponse> getFriends(
             @Path("id") String id
     );
 
     //Get getRank
 
-    @GET("rank")
+    @GET("user.php/rank")
     Call<FreindsResponse> getRank();
 
     //Get Friend Request
 
-    @GET("friendrequest/{id}")
+    @GET("user.php/friendrequest/{id}")
     Call<FreindsResponse> friendRequests(
             @Path("id") String id
     );
 
     //Search User By Username
 
-    @GET("searchuser/{username}")
+    @GET("user.php/searchuser/{username}")
     Call<LoginResponse> searchUser(
             @Path("username") String Username
     );
@@ -63,7 +63,7 @@ public interface API {
     //Send Friend Request
 
     @FormUrlEncoded
-    @POST("sendfriendrequest")
+    @POST("user.php/sendfriendrequest")
     Call<ResponseBody> sendFriendRequest(
             @Field("cid") String Cid,
             @Field("uid") String Uid
@@ -72,7 +72,7 @@ public interface API {
     //Add Requested Friend
 
     @FormUrlEncoded
-    @POST("addfriend")
+    @POST("user.php/addfriend")
     Call<ResponseBody> addFriend(
             @Field("cid") String Cid,
             @Field("uid") String Uid
@@ -81,7 +81,7 @@ public interface API {
     //Decline Requested Friend
 
     @FormUrlEncoded
-    @DELETE("declinefriend")
+    @DELETE("user.php/declinefriend")
     Call<ResponseBody> declineFriend(
             @Field("cid") String Cid,
             @Field("uid") String Uid
@@ -89,7 +89,7 @@ public interface API {
 
     //Update Username
 
-    @PUT("updateusername")
+    @PUT("user.php/updateusername")
     Call<ResponseBody> updateUsername(
             @Field("id") String id,
             @Field("username") String Username
@@ -97,7 +97,7 @@ public interface API {
 
     //Update Name
 
-    @PUT("updatename")
+    @PUT("user.php/updatename")
     Call<ResponseBody> updateName(
             @Field("id") String id,
             @Field("name") String name
@@ -105,7 +105,7 @@ public interface API {
 
     //Change Online
 
-    @PUT("changeonline")
+    @PUT("user.php/changeonline")
     Call<ResponseBody> changeOnline(
             @Field("id") String id,
             @Field("online") int online

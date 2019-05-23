@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL= "http://192.168.137.1:8080/EsmFamil/public/user.php/";
+    private static final String BASE_URL= "http://192.168.137.1:8080/EsmFamil/public/";
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
 
@@ -23,7 +23,11 @@ public class RetrofitClient {
         return mInstance;
     }
 
-    public API getApi(){
-        return  retrofit.create(API.class);
+    public UserAPI getUserApi(){
+        return  retrofit.create(UserAPI.class);
+    }
+
+    public GameAPI getGameApi(){
+        return  retrofit.create(GameAPI.class);
     }
 }

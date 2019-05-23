@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +119,7 @@ public class LoginFragment extends Fragment {
 
                 Call<LoginResponse> call= RetrofitClient
                         .getInstance()
-                        .getApi()
+                        .getUserApi()
                         .LogIn(username.getText().toString(),password.getText().toString());
 
                 call.enqueue(new Callback<LoginResponse>() {

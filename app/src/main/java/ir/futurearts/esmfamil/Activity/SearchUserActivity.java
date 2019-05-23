@@ -59,7 +59,7 @@ public class SearchUserActivity extends AppCompatActivity {
                 customProgress.showProgress(SearchUserActivity.this, false);
 
                 Call<LoginResponse> call= RetrofitClient.getInstance()
-                        .getApi().searchUser(username.getText().toString());
+                        .getUserApi().searchUser(username.getText().toString());
 
                 call.enqueue(new Callback<LoginResponse>() {
                     @Override
@@ -110,7 +110,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
                 Call<ResponseBody> call= RetrofitClient
                         .getInstance()
-                        .getApi()
+                        .getUserApi()
                         .sendFriendRequest(CurrentUser.getId(), uid);
 
                 call.enqueue(new Callback<ResponseBody>() {

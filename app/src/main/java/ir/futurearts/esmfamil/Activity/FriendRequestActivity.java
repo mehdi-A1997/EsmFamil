@@ -43,7 +43,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         customProgress.showProgress(this, false);
 
         Call<FreindsResponse> call= RetrofitClient.getInstance()
-                .getApi().friendRequests(CurrentUser.getId());
+                .getUserApi().friendRequests(CurrentUser.getId());
 
         call.enqueue(new Callback<FreindsResponse>() {
             @Override

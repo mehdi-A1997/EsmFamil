@@ -142,7 +142,7 @@ public class SignUpFragment extends Fragment {
 
                 Call<LoginResponse> call= RetrofitClient
                         .getInstance()
-                        .getApi()
+                        .getUserApi()
                         .SingUp(email.getText().toString(), username.getText().toString(), password.getText().toString());
 
                 call.enqueue(new Callback<LoginResponse>() {

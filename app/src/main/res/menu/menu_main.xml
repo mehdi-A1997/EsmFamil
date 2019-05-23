@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/menu_result"
         android:enabled="true"
-        android:icon="@mipmap/ic_addfriend"
-        android:title="Page1"
+        android:icon="@drawable/ic_assessment_black_24dp"
+        android:title="نتایج"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/menu_home"
         android:enabled="true"
-        android:title="Page2"
-        android:icon="@mipmap/ic_rank"
+        android:title="صفحه اصلی"
+        android:icon="@drawable/ic_home_black_24dp"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/menu_setting"
         android:enabled="true"
-        android:icon="@mipmap/ic_coin"
-        android:title="Page3"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="تنظیمات"
         app:showAsAction="ifRoom"/>
 </menu>

@@ -53,7 +53,7 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
          //TODO GET FRIENDS
         Call<FreindsResponse> call= RetrofitClient
                 .getInstance()
-                .getApi()
+                .getUserApi()
                 .getFriends(CurrentUser.getId());
 
         call.enqueue(new Callback<FreindsResponse>() {

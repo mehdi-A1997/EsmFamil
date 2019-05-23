@@ -81,7 +81,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     final CustomProgress customProgress= new CustomProgress();
                     customProgress.showProgress(context, false);
                     Call<ResponseBody> call= RetrofitClient.getInstance()
-                            .getApi().addFriend(CurrentUser.getId(), u.getId());
+                            .getUserApi().addFriend(CurrentUser.getId(), u.getId());
 
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -114,7 +114,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     final CustomProgress customProgress= new CustomProgress();
                     customProgress.showProgress(context, false);
                     Call<ResponseBody> call= RetrofitClient.getInstance()
-                            .getApi().declineFriend(CurrentUser.getId(), u.getId());
+                            .getUserApi().declineFriend(CurrentUser.getId(), u.getId());
 
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override

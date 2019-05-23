@@ -56,7 +56,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
 
         Call<FreindsResponse> call= RetrofitClient
                 .getInstance()
-                .getApi()
+                .getUserApi()
                 .getRank();
 
         call.enqueue(new Callback<FreindsResponse>() {
@@ -107,7 +107,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
 
                 Call<ResponseBody> call= RetrofitClient
                         .getInstance()
-                        .getApi()
+                        .getUserApi()
                         .sendFriendRequest(CurrentUser.getId(), uid);
 
                 call.enqueue(new Callback<ResponseBody>() {
