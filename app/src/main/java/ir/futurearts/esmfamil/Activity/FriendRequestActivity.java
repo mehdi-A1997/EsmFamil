@@ -14,7 +14,7 @@ import java.util.List;
 import ir.futurearts.esmfamil.Adapter.FriendRequestAdapter;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Module.UserM;
-import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.Responses.FriendsResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
@@ -42,13 +42,13 @@ public class FriendRequestActivity extends AppCompatActivity {
         final CustomProgress customProgress= new CustomProgress();
         customProgress.showProgress(this, false);
 
-        Call<FreindsResponse> call= RetrofitClient.getInstance()
+        Call<FriendsResponse> call= RetrofitClient.getInstance()
                 .getUserApi().friendRequests(CurrentUser.getId());
 
-        call.enqueue(new Callback<FreindsResponse>() {
+        call.enqueue(new Callback<FriendsResponse>() {
             @Override
-            public void onResponse(Call<FreindsResponse> call, Response<FreindsResponse> response) {
-                FreindsResponse fr= response.body();
+            public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
+                FriendsResponse fr= response.body();
 
                 for(UserM u:fr.getUsers()){
                     data.add(u);
@@ -58,7 +58,7 @@ public class FriendRequestActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FreindsResponse> call, Throwable t) {
+            public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 customProgress.hideProgress();
                 FancyToast.makeText(FriendRequestActivity.this, getString(R.string.systemError),
                         FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();

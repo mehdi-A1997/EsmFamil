@@ -4,19 +4,19 @@ import java.util.List;
 
 import ir.futurearts.esmfamil.Module.UserM;
 
-public class FreindsResponse {
+public class FriendsResponse {
     private boolean error;
     private String message;
     private List<UserM> users;
 
 
-    public FreindsResponse(boolean error, String message, List<UserM> users) {
+    public FriendsResponse(boolean error, String message, List<UserM> users) {
         this.error = error;
         this.message = message;
         this.users = users;
     }
 
-    public FreindsResponse() {
+    public FriendsResponse() {
     }
 
     public boolean isError() {

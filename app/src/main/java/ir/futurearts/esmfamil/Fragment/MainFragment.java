@@ -13,26 +13,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ir.futurearts.esmfamil.Activity.CompleteGameCreationActivity;
 import ir.futurearts.esmfamil.Activity.FriendsActivity;
-import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Activity.RankActivity;
-import ir.futurearts.esmfamil.Activity.SelectUserActivity;
+import ir.futurearts.esmfamil.Activity.SelectFriendActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
+import ir.futurearts.esmfamil.Network.Responses.CreateGameResponse;
+import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
+import ir.futurearts.esmfamil.Utils.DialogActivity;
+import ir.futurearts.esmfamil.Utils.OptionsActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +51,9 @@ public class MainFragment extends Fragment {
     private ConstraintLayout normalgame;
     private TextView coin,score;
     private CircleImageView uimg;
+
+    private final int OPTION_CODE= 1001;
+    private final int NORMALRANDOM_GAME= 1002;
 
 
     public MainFragment() {
@@ -69,7 +78,7 @@ public class MainFragment extends Fragment {
         competgame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), SelectUserActivity.class));
+                startActivity(new Intent(getContext(), SelectFriendActivity.class));
             }
         });
 
@@ -90,37 +99,131 @@ public class MainFragment extends Fragment {
         normalgame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(getContext(), OptionsActivity.class);
+                String[] data = new String[]{"بازی تصادفی", "بازی با دوستان"};
+                intent.putExtra("list", data);
 
-                try {
-                    JSONObject object= new JSONObject();
-                    object.put("name", "mehdi");
-                    object.put("lastname", "allahyari");
-                    Call<ResponseBody> call= RetrofitClient.getInstance()
-                            .getGameApi().test(1,2,0,object);
-
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                Log.d("MM", response.body().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                startActivityForResult(intent, OPTION_CODE);
 
             }
         });
 
+        getmyScore();
         return v;
     }
+
+    private void getmyScore() {
+        Call<ResponseBody> call= RetrofitClient.getInstance()
+                .getUserApi().getScore(CurrentUser.getId());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.code() == 200){
+                    try {
+                        JSONObject object= new JSONObject(response.body().string());
+                        coin.setText(object.getString("coin"));
+                        score.setText(object.getString("score"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void selectFriend() {
+        Intent intent= new Intent(getContext(), SelectFriendActivity.class);
+        intent.putExtra("type", 0);
+        startActivity(intent);
+    }
+
+    private void createRandomGame() {
+        final CustomProgress customProgress= new CustomProgress();
+        customProgress.showProgress(getContext(), false);
+
+        Call<CreateGameResponse> call= RetrofitClient.getInstance()
+                .getGameApi().CreateRandomGame(CurrentUser.getId(), 0);
+
+        call.enqueue(new Callback<CreateGameResponse>() {
+            @Override
+            public void onResponse(Call<CreateGameResponse> call, Response<CreateGameResponse> response) {
+                customProgress.hideProgress();
+                if(response.code() == 201){
+                    CreateGameResponse cgr= response.body();
+                    if(cgr.getGame().getLetter().equals("")){
+                        Intent intent= new Intent(getContext(), CompleteGameCreationActivity.class);
+                        intent.putExtra("type", 2);
+                        intent.putExtra("id", cgr.getGame().getId());
+                        startActivityForResult(intent, NORMALRANDOM_GAME);
+                    }
+                    else {
+                        Intent intent =new Intent(getContext(), DialogActivity.class);
+                        intent.putExtra("title", "پیام");
+                        intent.putExtra("type", "singleS");
+                        intent.putExtra("text", "حریف تصادقی در مقابل شما قرار گرفت. به بخش بازی مراجعه کنید.");
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    try {
+                        DefaultResponse df= new DefaultResponse(response.errorBody().string());
+                        FancyToast.makeText(getContext(), df.getMessage(),
+                                FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CreateGameResponse> call, Throwable t) {
+                customProgress.hideProgress();
+                Log.d("MM", t.getMessage()+"");
+                FancyToast.makeText(getContext(), getString(R.string.systemError),
+                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == OPTION_CODE){
+            if(resultCode==RESULT_OK){
+                int item=Integer.parseInt(data.getStringExtra("item"));
+                switch (item){
+                    case 0:
+                        createRandomGame();
+                        break;
+
+                    case 1:
+                        selectFriend();
+                        break;
+                }
+            }
+        }
+
+        if(requestCode == NORMALRANDOM_GAME){
+            if(resultCode == RESULT_OK){
+                Intent intent =new Intent(getContext(), DialogActivity.class);
+                intent.putExtra("title", "پیام");
+                intent.putExtra("type", "singleS");
+                intent.putExtra("text", "بازی ایجاد شد. در انتظار حریف تصادفی...");
+
+                startActivity(intent);
+            }
+        }
+    }
+
+
 
 }

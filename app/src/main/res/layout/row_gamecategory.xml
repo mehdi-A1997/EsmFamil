@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/category_sec"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/flower">
+
+        <TextView
+            android:id="@+id/category_title"
+            android:layout_width="120dp"
+            android:layout_height="55dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/category_title_bg"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/ziba"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="اسم"
+            android:textSize="29sp"/>
+
+        <TextView
+            android:id="@+id/category_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/category_text_bg"
+            android:layout_marginBottom="16sp"
+            android:padding="6dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="@font/vazir"
+            android:text="مهدی"
+            android:textStyle="bold"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

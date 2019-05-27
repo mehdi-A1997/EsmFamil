@@ -20,7 +20,7 @@ import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.AddFriendInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
-import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.Responses.FriendsResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
@@ -54,16 +54,16 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
 
         progress.start();
 
-        Call<FreindsResponse> call= RetrofitClient
+        Call<FriendsResponse> call= RetrofitClient
                 .getInstance()
                 .getUserApi()
                 .getRank();
 
-        call.enqueue(new Callback<FreindsResponse>() {
+        call.enqueue(new Callback<FriendsResponse>() {
             @Override
-            public void onResponse(Call<FreindsResponse> call, Response<FreindsResponse> response) {
+            public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
 
-                FreindsResponse fr= response.body();
+                FriendsResponse fr= response.body();
                 Log.d("MM",fr.getMessage());
                 Log.d("MM",fr.getUsers().size()+"");
                 for(UserM u: fr.getUsers()){
@@ -76,7 +76,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
             }
 
             @Override
-            public void onFailure(Call<FreindsResponse> call, Throwable t) {
+            public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 progress.stop();
                 progress.setVisibility(View.GONE);
                 FancyToast.makeText(RankActivity.this, getString(R.string.systemError),

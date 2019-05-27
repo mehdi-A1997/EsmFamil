@@ -20,7 +20,7 @@ import ir.futurearts.esmfamil.Adapter.UserAdapter;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
-import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.Responses.FriendsResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import retrofit2.Call;
@@ -51,19 +51,20 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
         list.setLayoutManager(new LinearLayoutManager(this));
 
          //TODO GET FRIENDS
-        Call<FreindsResponse> call= RetrofitClient
+        Call<FriendsResponse> call= RetrofitClient
                 .getInstance()
                 .getUserApi()
                 .getFriends(CurrentUser.getId());
 
-        call.enqueue(new Callback<FreindsResponse>() {
+        call.enqueue(new Callback<FriendsResponse>() {
             @Override
-            public void onResponse(Call<FreindsResponse> call, Response<FreindsResponse> response) {
+            public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
 
-                FreindsResponse fr= response.body();
+                if(response.code()==200) {
+                    FriendsResponse fr = response.body();
 
-                for(UserM u: fr.getUsers()){
-                    data.add(u);
+                    assert fr != null;
+                    data.addAll(fr.getUsers());
                 }
                 progress.stop();
                 progress.setVisibility(View.GONE);
@@ -72,7 +73,7 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
             }
 
             @Override
-            public void onFailure(Call<FreindsResponse> call, Throwable t) {
+            public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 progress.stop();
                 progress.setVisibility(View.GONE);
                 FancyToast.makeText(FriendsActivity.this, getString(R.string.systemError),

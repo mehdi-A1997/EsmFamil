@@ -9,4 +9,69 @@
     <string name="emailError">نشانی الکترونیکی معتبر نیست</string>
 
     <string name="systemError">خطای سیستم.مجددا تلاش کنید</string>
+
+    <string name="about">تیم توسعه هنرهای آینده، فعالیت حرفه ای خود را از سال 1396 آغاز کرده و به طراحی اپلیکیشن تلفن هوشمند و وبسایت می پردازد.</string>
+
+    <string-array name="letters">
+        <item>آ</item>
+        <item>ب</item>
+        <item>پ</item>
+        <item>ت</item>
+        <item>ث</item>
+        <item>ج</item>
+        <item>چ</item>
+        <item>ح</item>
+        <item>خ</item>
+        <item>د</item>
+        <item>ذ</item>
+        <item>ر</item>
+        <item>ز</item>
+        <item>ژ</item>
+        <item>س</item>
+        <item>ش</item>
+        <item>ص</item>
+        <item>ض</item>
+        <item>ط</item>
+        <item>ظ</item>
+        <item>ع</item>
+        <item>غ</item>
+        <item>ف</item>
+        <item>ق</item>
+        <item>ک</item>
+        <item>گ</item>
+        <item>ل</item>
+        <item>م</item>
+        <item>ن</item>
+        <item>و</item>
+        <item>ه</item>
+        <item>ی</item>
+    </string-array>
+
+    <string-array name="items">
+        <item>اسم</item>
+        <item>فامیل</item>
+        <item>شهر</item>
+        <item>کشور</item>
+        <item>غذا</item>
+        <item>حیوان</item>
+        <item>رنگ</item>
+        <item>گل</item>
+        <item>میوه</item>
+        <item>اشیاء</item>
+    </string-array>
+
+    <string-array name="images">
+        <item>user_1</item>
+        <item>user_2</item>
+        <item>user_3</item>
+        <item>user_4</item>
+        <item>user_5</item>
+        <item>user_6</item>
+        <item>user_7</item>
+        <item>user_8</item>
+        <item>user_9</item>
+        <item>user_10</item>
+        <item>user_11</item>
+        <item>user_12</item>
+    </string-array>
 </resources>

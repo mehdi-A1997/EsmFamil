@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="ms_stepperStyle">@style/DotStepperStyle</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
@@ -25,4 +26,23 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/transparet_bg</item>
     </style>
+
+    <style name="DotStepperStyle" parent="MSDefaultStepperLayoutTheme">
+        <item name="ms_stepperType">tabs</item>
+        <item name="ms_activeStepColor">@color/colorAccent</item>
+        <item name="ms_inactiveStepColor">@color/gray</item>
+        <item name="ms_stepTabTitleStyle">@style/TabItem</item>
+        <item name="ms_bottomNavigationBackground">?attr/colorPrimaryDark</item>
+        <item name="ms_tabsContainerStyle">@style/CustomTab</item>
+    </style>
+
+    <style name="CustomTab" parent="MSStepTabsContainer">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="TabItem" parent="MSStepTabTitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/vazir</item>
+    </style>
+
 </resources>

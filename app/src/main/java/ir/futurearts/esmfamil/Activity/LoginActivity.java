@@ -5,8 +5,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
-import ir.futurearts.esmfamil.Fragment.LoginFragment;
-import ir.futurearts.esmfamil.Fragment.SignUpFragment;
+import ir.futurearts.esmfamil.Fragment.singing.LoginFragment;
+import ir.futurearts.esmfamil.Fragment.singing.SignUpFragment;
 import ir.futurearts.esmfamil.Interface.LoginInterface;
 import ir.futurearts.esmfamil.R;
 

@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import ir.futurearts.esmfamil.Module.UserM;
 
 public  class CurrentUser {
-    private static String id, name, email, username, img, online, score;
+    private static String id, name, email, username, img, online, score, coin;
     private static boolean login= false;
 
     private static SharedPreferences mPref;
@@ -80,39 +80,17 @@ public  class CurrentUser {
         CurrentUser.login = login;
     }
 
-    public static void LoadUser(Context context){
-        mPref= context.getSharedPreferences("user",Context.MODE_PRIVATE);
-        editor= mPref.edit();
-        if(!mPref.getBoolean("login", false)){
-            login= false;
-            return;
-        }
-
-        login= true;
-
-        id= mPref.getString("id", "-1");
-        name= mPref.getString("name", "-");
-        username= mPref.getString("username", "-");
-        email= mPref.getString("email", "-");
-        img= mPref.getString("img", "default");
-        online= mPref.getString("online", "1");
-        score= mPref.getString("score", "0");
+    public static String getCoin() {
+        return coin;
     }
 
-    public static void SaveUser(UserM u){
-        editor.putString("name", u.getName());
-        editor.putString("username", u.getUsername());
-        editor.putString("id", u.getId());
-        editor.putString("email", u.getEmail());
-        editor.putString("online", "1");
-        editor.putString("img", u.getImg());
-        editor.putString("score", u.getScore());
-        editor.putBoolean("login", true);
-
-        editor.commit();
+    public static void setCoin(String coin) {
+        CurrentUser.coin = coin;
     }
+
 
     public static void Logout(){
+        login= false;
         editor.clear();
         editor.commit();
     }

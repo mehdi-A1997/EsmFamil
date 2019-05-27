@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:gravity="center"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    >
+
+    <LinearLayout
+        android:id="@+id/game_sec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/game_notactive_bg">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/game_opponentimg"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:maxWidth="55dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_nouser" />
+
+        <TextView
+            android:id="@+id/game_opponentname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="Mehdi.A"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.7"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="2dp">
+            <TextView
+                android:id="@+id/game_letter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="آ"
+                android:gravity="center"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                android:fontFamily="@font/parastoo"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/game_opponentscore"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/game_row_bg"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="21sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/game_scorediv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="VS"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/game_userscore"
+                app:layout_constraintStart_toEndOf="@+id/game_opponentscore"
+                app:layout_constraintTop_toTopOf="@+id/game_opponentscore" />
+
+            <TextView
+                android:id="@+id/game_userscore"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/game_row_bg"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="21sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/game_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="تساوی"
+                android:textColor="@color/blue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/game_opponentscore" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/game_userimg"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:maxWidth="55dp"
+            android:src="@mipmap/ic_nouser" />
+
+        <TextView
+            android:id="@+id/game_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="Mehdi.A"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/game_indicator"
+        android:layout_width="8dp"
+        android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

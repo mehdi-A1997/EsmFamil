@@ -2,10 +2,10 @@ package ir.futurearts.esmfamil.Module;
 
 
 public class UserM {
-    private String id, name, username, email, score, img;
+    private String id, name, username, email, score, img, coin;
     private int online;
 
-    public UserM(String id, String name, String username, String email, String score, String img, int online) {
+    public UserM(String id, String name, String username, String email, String score, String img, int online, String coin) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -13,6 +13,7 @@ public class UserM {
         this.score = score;
         this.img = img;
         this.online = online;
+        this.coin = coin;
     }
 
     public UserM() {
@@ -72,5 +73,13 @@ public class UserM {
 
     public void setOnline(int online) {
         this.online = online;
+    }
+
+    public String getCoin() {
+        return coin;
+    }
+
+    public void setCoin(String coin) {
+        this.coin = coin;
     }
 }

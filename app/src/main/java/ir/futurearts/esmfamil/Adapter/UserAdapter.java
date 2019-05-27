@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.FriendsActivity;
-import ir.futurearts.esmfamil.Activity.SelectUserActivity;
+import ir.futurearts.esmfamil.Activity.SelectFriendActivity;
 import ir.futurearts.esmfamil.Interface.UserInterface;
 import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.R;
@@ -77,7 +77,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
             name.setText(u.getName());
             username.setText(u.getUsername());
             score.setText(u.getScore());
-            if(context instanceof SelectUserActivity)
+            if(context instanceof SelectFriendActivity)
                 v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

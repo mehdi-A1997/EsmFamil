@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <com.github.lguipeng.library.animcheckbox.AnimCheckBox
+            android:id="@+id/item_checkbox"
+            android:layout_width="80dp"
+            android:padding="4dp"
+            android:layout_height="wrap_content"
+            app:stroke_width="4dp"
+            app:stroke_color="#33691e"
+            app:circle_color="#c5e1a5"
+            app:checked="true" />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/vazir"
+            android:text="نام"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"/>
+</LinearLayout>

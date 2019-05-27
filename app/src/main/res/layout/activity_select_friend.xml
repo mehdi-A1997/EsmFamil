@@ -3,21 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="320dp"
-    tools:context=".Activity.SelectUserActivity">
-
-    <TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/samim"
-        android:text="انتخاب کنید..."
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="300dp"
+    tools:context=".Activity.SelectFriendActivity"
+    android:background="@drawable/main_bg">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/select_user_rv"
@@ -29,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialog_title"
+        app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"/>
 
     <com.victor.loading.newton.NewtonCradleLoading
@@ -38,7 +26,7 @@
         android:layout_height="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialog_title"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

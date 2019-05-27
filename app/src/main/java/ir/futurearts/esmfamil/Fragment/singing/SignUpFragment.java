@@ -1,8 +1,9 @@
-package ir.futurearts.esmfamil.Fragment;
+package ir.futurearts.esmfamil.Fragment.singing;
 
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.LoginInterface;
+import ir.futurearts.esmfamil.Module.UserM;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
 import ir.futurearts.esmfamil.Network.Responses.LoginResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
@@ -45,6 +47,9 @@ public class SignUpFragment extends Fragment {
     private Button signupbtn;
     private TextView backbtn;
     private ImageView showpass;
+
+    private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
 
     private boolean visible=false;
 
@@ -68,6 +73,8 @@ public class SignUpFragment extends Fragment {
         backbtn=v.findViewById(R.id.signup_back_btn);
         showpass=v.findViewById(R.id.signup_show);
 
+        mPref= getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        editor= mPref.edit();
 
         signupbtn.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.disable_btn));
         signupbtn.setEnabled(false);
@@ -152,7 +159,28 @@ public class SignUpFragment extends Fragment {
                         if(response.code() == 201){
                             LoginResponse lr= response.body();
 
-                            CurrentUser.SaveUser(lr.getUser());
+                            UserM u= lr.getUser();
+
+                            editor.putString("name", u.getName());
+                            editor.putString("username", u.getUsername());
+                            editor.putString("id", u.getId());
+                            editor.putString("email", u.getEmail());
+                            editor.putString("online", "1");
+                            editor.putString("img", u.getImg());
+                            editor.putString("score", u.getScore());
+                            editor.putBoolean("login", true);
+
+                            editor.commit();
+
+                            CurrentUser.setId(u.getId());
+                            CurrentUser.setName(u.getName());
+                            CurrentUser.setUsername(u.getUsername());
+                            CurrentUser.setEmail(u.getEmail());
+                            CurrentUser.setImg(u.getImg());
+                            CurrentUser.setOnline(u.getOnline()+"");
+                            CurrentUser.setScore(u.getScore());
+                            CurrentUser.setCoin(u.getCoin());
+                            CurrentUser.setLogin(true);
 
                             startActivity(new Intent(getActivity(), MainActivity.class));
                         }

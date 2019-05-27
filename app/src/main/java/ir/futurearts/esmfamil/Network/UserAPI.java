@@ -1,6 +1,6 @@
 package ir.futurearts.esmfamil.Network;
 
-import ir.futurearts.esmfamil.Network.Responses.FreindsResponse;
+import ir.futurearts.esmfamil.Network.Responses.FriendsResponse;
 import ir.futurearts.esmfamil.Network.Responses.LoginResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -17,7 +17,7 @@ public interface UserAPI {
     //SignUp User
 
     @FormUrlEncoded
-    @POST("signup")
+    @POST("user.php/signup")
     Call<LoginResponse> SingUp(
           @Field("email") String Email,
           @Field("username") String Username,
@@ -28,7 +28,7 @@ public interface UserAPI {
     //Login User
 
     @FormUrlEncoded
-    @POST("login")
+    @POST("user.php/login")
     Call<LoginResponse> LogIn(
           @Field("username") String Username,
           @Field("pass") String Password
@@ -37,19 +37,26 @@ public interface UserAPI {
     //Get getFriends
 
     @GET("user.php/friends/{id}")
-    Call<FreindsResponse> getFriends(
+    Call<FriendsResponse> getFriends(
+            @Path("id") String id
+    );
+
+    //Get getFriends
+
+    @GET("user.php/onlinefriends/{id}")
+    Call<FriendsResponse> getOnlineFriends(
             @Path("id") String id
     );
 
     //Get getRank
 
     @GET("user.php/rank")
-    Call<FreindsResponse> getRank();
+    Call<FriendsResponse> getRank();
 
     //Get Friend Request
 
     @GET("user.php/friendrequest/{id}")
-    Call<FreindsResponse> friendRequests(
+    Call<FriendsResponse> friendRequests(
             @Path("id") String id
     );
 
@@ -60,6 +67,12 @@ public interface UserAPI {
             @Path("username") String Username
     );
 
+    //Search User By Username
+
+    @GET("user.php/getuser/{id}")
+    Call<LoginResponse> getUser(
+            @Path("id") String id
+    );
     //Send Friend Request
 
     @FormUrlEncoded
@@ -87,27 +100,41 @@ public interface UserAPI {
             @Field("uid") String Uid
     );
 
-    //Update Username
+    //Update User
 
-    @PUT("user.php/updateusername")
-    Call<ResponseBody> updateUsername(
+    @PUT("user.php/updateuser")
+    @FormUrlEncoded
+    Call<ResponseBody> updateUser(
             @Field("id") String id,
-            @Field("username") String Username
-    );
-
-    //Update Name
-
-    @PUT("user.php/updatename")
-    Call<ResponseBody> updateName(
-            @Field("id") String id,
-            @Field("name") String name
+            @Field("name") String name,
+            @Field("username") String username,
+            @Field("img") String img,
+            @Field("changed") int changed
     );
 
     //Change Online
 
     @PUT("user.php/changeonline")
+    @FormUrlEncoded
     Call<ResponseBody> changeOnline(
             @Field("id") String id,
             @Field("online") int online
+    );
+
+    //Change Password
+
+    @PUT("user.php/changepassword")
+    @FormUrlEncoded
+    Call<ResponseBody> changePassword(
+            @Field("id") String id,
+            @Field("oldpass") String  pass,
+            @Field("newpass") String  newpass
+    );
+
+    //Get Score
+
+    @GET("user.php/getscore/{id}")
+    Call<ResponseBody> getScore(
+            @Path("id") String id
     );
 }

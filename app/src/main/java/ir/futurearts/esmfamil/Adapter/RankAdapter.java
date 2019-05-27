@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -21,7 +22,6 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
     private List<UserM> data;
     private Context context;
-    private Drawable defultbg=null;
     private AddFriendInterface adi;
     public RankAdapter(List<UserM> data, Context context,AddFriendInterface adi) {
         this.data = data;
@@ -50,7 +50,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
     public class myHolder extends RecyclerView.ViewHolder{
         private View v;
-        private CardView main;
+        private ConstraintLayout main;
         private CircleImageView uimg;
         private TextView name,username,score,online;
         public myHolder(@NonNull View itemView) {
@@ -66,8 +66,6 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
         public void set(final UserM u,int p){
 
-            if(defultbg==null)
-                defultbg=main.getBackground();
 
             uimg.setImageBitmap(null);
             uimg.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.ic_nouser));
@@ -88,7 +86,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
                     username.setTextColor(ContextCompat.getColor(context,R.color.white));
                     break;
                     default:
-                        main.setBackground(defultbg);
+                        main.setBackground(ContextCompat.getDrawable(context,R.drawable.game_notactive_bg));
                         username.setTextColor(ContextCompat.getColor(context,R.color.gray));
 
             }

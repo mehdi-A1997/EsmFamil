@@ -13,8 +13,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.SearchUserActivity"
-            android:theme="@style/AppTheme.Dialog"></activity>
+        <activity android:name=".Activity.AboutActivity"></activity>
+        <activity
+            android:name=".Activity.ChangePasswordActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".Activity.ChangeImageActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity android:name=".Activity.ProfileActivity" />
+        <activity android:name=".Activity.GameActivity" />
+        <activity
+            android:name=".Activity.GameDetailsActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".Activity.SelectFriendActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity android:name=".Activity.CompleteGameCreationActivity" />
+        <activity
+            android:name=".Utils.OptionsActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".Activity.SearchUserActivity"
+            android:theme="@style/AppTheme.Dialog" />
         <activity android:name=".Activity.FriendRequestActivity" />
         <activity android:name=".Activity.FriendsActivity" />
         <activity
@@ -22,9 +42,6 @@
             android:theme="@style/AppTheme.Dialog" />
         <activity android:name=".Activity.RankActivity" />
         <activity android:name=".Activity.LoginActivity" />
-        <activity
-            android:name=".Activity.SelectUserActivity"
-            android:theme="@style/AppTheme.Dialog" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
