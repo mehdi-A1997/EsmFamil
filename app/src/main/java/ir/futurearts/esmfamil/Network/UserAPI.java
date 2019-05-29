@@ -67,7 +67,7 @@ public interface UserAPI {
             @Path("username") String Username
     );
 
-    //Search User By Username
+    //Search User By Id
 
     @GET("user.php/getuser/{id}")
     Call<LoginResponse> getUser(

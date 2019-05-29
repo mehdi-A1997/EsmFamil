@@ -40,7 +40,7 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
 
     private int type=0;
 
-    private final int CREATE_CODE= 1001;
+    private final int CREATENORMAL_CODE = 1001;
     private final int RESULT_CODE= 1002;
 
     @Override
@@ -108,17 +108,26 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
 
     @Override
     public void userSelected(UserM u) {
-        Intent intent= new Intent(this, CompleteGameCreationActivity.class);
-        intent.putExtra("oid", u.getId());
-        intent.putExtra("type", type);
-        startActivityForResult(intent, CREATE_CODE);
+
+        if(type == 0) {
+            Intent intent = new Intent(this, CompleteGameCreationActivity.class);
+            intent.putExtra("oid", u.getId());
+            intent.putExtra("type", type);
+            startActivityForResult(intent, CREATENORMAL_CODE);
+        }
+        else {
+            Intent intent = new Intent(this, CompleteGameCreationActivity.class);
+            intent.putExtra("oid", u.getId());
+            intent.putExtra("type", type);
+            startActivity(intent);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CREATE_CODE){
+        if(requestCode == CREATENORMAL_CODE){
             if(resultCode == RESULT_OK){
                 Intent intent =new Intent(SelectFriendActivity.this, DialogActivity.class);
                 intent.putExtra("title", "پیام");
@@ -134,5 +143,6 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
                 finish();
             }
         }
+
     }
 }

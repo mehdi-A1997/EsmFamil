@@ -11,8 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
@@ -23,6 +29,7 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.CompleteGameCreationActivity;
 import ir.futurearts.esmfamil.Activity.FriendsActivity;
+import ir.futurearts.esmfamil.Activity.GameRequestActivity;
 import ir.futurearts.esmfamil.Activity.RankActivity;
 import ir.futurearts.esmfamil.Activity.SelectFriendActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
@@ -51,9 +58,11 @@ public class MainFragment extends Fragment {
     private ConstraintLayout normalgame;
     private TextView coin,score;
     private CircleImageView uimg;
+    private ImageView requests;
 
-    private final int OPTION_CODE= 1001;
+    private final int NORMAL_CODE = 1001;
     private final int NORMALRANDOM_GAME= 1002;
+    private final int COMPETE_CODE = 1003;
 
 
     public MainFragment() {
@@ -74,11 +83,16 @@ public class MainFragment extends Fragment {
         coin= v.findViewById(R.id.coin_text);
         score= v.findViewById(R.id.main_uscore);
         uimg= v.findViewById(R.id.main_uimg);
+        requests= v.findViewById(R.id.main_requests);
 
         competgame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), SelectFriendActivity.class));
+                Intent intent = new Intent(getContext(), OptionsActivity.class);
+                String[] data = new String[]{"بازی تصادفی", "بازی با دوستان"};
+                intent.putExtra("list", data);
+
+                startActivityForResult(intent, COMPETE_CODE);
             }
         });
 
@@ -103,15 +117,21 @@ public class MainFragment extends Fragment {
                 String[] data = new String[]{"بازی تصادفی", "بازی با دوستان"};
                 intent.putExtra("list", data);
 
-                startActivityForResult(intent, OPTION_CODE);
+                startActivityForResult(intent, NORMAL_CODE);
 
+            }
+        });
+
+        requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), GameRequestActivity.class));
             }
         });
 
         getmyScore();
         return v;
     }
-
     private void getmyScore() {
         Call<ResponseBody> call= RetrofitClient.getInstance()
                 .getUserApi().getScore(CurrentUser.getId());
@@ -139,14 +159,59 @@ public class MainFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NORMAL_CODE){
+            if(resultCode==RESULT_OK){
+                int item=Integer.parseInt(data.getStringExtra("item"));
+                switch (item){
+                    case 0:
+                        createRandomGameNormal();
+                        break;
 
-    private void selectFriend() {
+                    case 1:
+                        selectFriendNormal();
+                        break;
+                }
+            }
+        }
+
+        if(requestCode == NORMALRANDOM_GAME){
+            if(resultCode == RESULT_OK){
+                Intent intent =new Intent(getContext(), DialogActivity.class);
+                intent.putExtra("title", "پیام");
+                intent.putExtra("type", "singleS");
+                intent.putExtra("text", "بازی ایجاد شد. در انتظار حریف تصادفی...");
+
+                startActivity(intent);
+            }
+        }
+
+        if(requestCode == COMPETE_CODE){
+            if(resultCode==RESULT_OK){
+                int item=Integer.parseInt(data.getStringExtra("item"));
+                switch (item){
+                    case 0:
+                        createRandomGameCompete();
+                        break;
+
+                    case 1:
+                        selectFriendCompete();
+                        break;
+                }
+            }
+        }
+    }
+
+
+    private void selectFriendNormal() {
         Intent intent= new Intent(getContext(), SelectFriendActivity.class);
         intent.putExtra("type", 0);
         startActivity(intent);
     }
 
-    private void createRandomGame() {
+    private void createRandomGameNormal() {
         final CustomProgress customProgress= new CustomProgress();
         customProgress.showProgress(getContext(), false);
 
@@ -194,36 +259,30 @@ public class MainFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == OPTION_CODE){
-            if(resultCode==RESULT_OK){
-                int item=Integer.parseInt(data.getStringExtra("item"));
-                switch (item){
-                    case 0:
-                        createRandomGame();
-                        break;
 
-                    case 1:
-                        selectFriend();
-                        break;
-                }
-            }
-        }
-
-        if(requestCode == NORMALRANDOM_GAME){
-            if(resultCode == RESULT_OK){
-                Intent intent =new Intent(getContext(), DialogActivity.class);
-                intent.putExtra("title", "پیام");
-                intent.putExtra("type", "singleS");
-                intent.putExtra("text", "بازی ایجاد شد. در انتظار حریف تصادفی...");
-
-                startActivity(intent);
-            }
-        }
+    private void selectFriendCompete() {
+        Intent intent= new Intent(getContext(), SelectFriendActivity.class);
+        intent.putExtra("type", 1);
+        startActivity(intent);
     }
 
+    private void createRandomGameCompete() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
+
+        // The query will search for a ParseObject, given its objectId.
+        // When the query finishes running, it will invoke the GetCallback
+        // with either the object, or the exception thrown
+        query.getInBackground("lKsxj89agL", new GetCallback<ParseObject>() {
+            public void done(ParseObject result, ParseException e) {
+                if (e == null) {
+                    Toast.makeText(getContext(), result.getString("Status"), Toast.LENGTH_SHORT).show();
+                } else {
+                    // something went wrong
+                    Log.d("MM", e.getMessage());
+                }
+            }
+        });
+    }
 
 
 }

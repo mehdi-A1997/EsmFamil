@@ -21,6 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.AboutActivity;
 import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Activity.ProfileActivity;
+import ir.futurearts.esmfamil.Activity.WaitForAcceptActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.DialogActivity;
@@ -85,7 +86,7 @@ public class SettingFragment extends Fragment {
         score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(getContext(), WaitForAcceptActivity.class));
             }
         });
 

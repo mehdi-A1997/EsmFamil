@@ -1,6 +1,8 @@
 package ir.futurearts.esmfamil.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -70,7 +73,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
         public void set(final UserM u, int position) {
 
-            //TODO SET USER IMG
+            uimg.setImageDrawable(getDrawableByName(u.getImg()));
 
             username.setText(u.getUsername());
             uname.setText(u.getName());
@@ -141,5 +144,11 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 }
             });
         }
+    }
+
+    private Drawable getDrawableByName(String name){
+        Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier(name, "drawable", context.getPackageName());
+        return ContextCompat.getDrawable(context,resourceId);
     }
 }

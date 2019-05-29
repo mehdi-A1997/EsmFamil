@@ -1,5 +1,6 @@
 package ir.futurearts.esmfamil.Activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -7,18 +8,28 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Module.ItemsM;
@@ -26,6 +37,8 @@ import ir.futurearts.esmfamil.Network.Responses.CreateGameResponse;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
+import ir.futurearts.esmfamil.Utils.DialogActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +58,12 @@ public class GameActivity extends AppCompatActivity {
     private int GID;
 
     private CountDownTimer cdt;
+    private int type= 0;
+    private ParseLiveQueryClient parseLiveQueryClient = null;
+    private ParseObject game= null;
+    private CustomProgress customProgress;
+
+    private final int RESULT_CODE= 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +100,10 @@ public class GameActivity extends AppCompatActivity {
         ItemsM itemsM= (ItemsM) getIntent().getSerializableExtra("items");
         GID= getIntent().getIntExtra("id", 0);
         letter.setText(getIntent().getStringExtra("letter"));
+        type= getIntent().getIntExtra("type", 0);
+
+        customProgress= new CustomProgress();
+
         if(GID == 0 )
             finish();
 
@@ -155,15 +178,80 @@ public class GameActivity extends AppCompatActivity {
 
         }.start();
 
+        if(type == 1) {
+            cdt.cancel();
+            setListener();
+        }
+        getgame();
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareResult();
+               if(type == 1)
+               {
+                   customProgress.showProgress(GameActivity.this,false);
+                   game.put("Status", "3");
+                   game.saveInBackground();
+               }
+               else
+                   prepareResult();
             }
         });
     }
 
+    private void getgame() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
+        query.whereEqualTo("Gid", GID+"");
+
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null){
+                    game= object;
+                }else {
+                    Log.d("MM", "Error Update");
+                    Log.d("MM", e.getMessage());
+                    getgame();
+                }
+            }
+        });
+    }
+
+    private void setListener() {
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://esmfamil.back4app.io/"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.d("MM", "Error Listen");
+        }
+
+
+        if (parseLiveQueryClient != null) {
+            if (parseLiveQueryClient != null) {
+                ParseQuery parseQuery = new ParseQuery("Games");
+                parseQuery.whereEqualTo("Gid", GID+"");
+                Log.d("MM", "Start Listening");
+                SubscriptionHandling subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
+
+                subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+                    @Override
+                    public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            public void run() {
+                                String status = object.getString("Status");
+                                Log.d("MM", status);
+                                prepareResult();
+                                customProgress.showProgress(GameActivity.this,false);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }
+
     private void prepareResult() {
+        cdt.cancel();
         String name= tname.getText().toString();
         String family= tfamily.getText().toString();
         String city= tcity.getText().toString();
@@ -205,13 +293,19 @@ public class GameActivity extends AppCompatActivity {
         call.enqueue(new Callback<CreateGameResponse>() {
             @Override
             public void onResponse(Call<CreateGameResponse> call, Response<CreateGameResponse> response) {
+                customProgress.hideProgress();
                 if(response.code() == 200){
                     CreateGameResponse cgr= response.body();
 
-                    Intent intent= new Intent();
-                    intent.putExtra("game", cgr.getGame());
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    if(type == 0){
+                        Intent intent= new Intent();
+                        intent.putExtra("game", cgr.getGame());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    else{
+                        openDialog();
+                    }
                 }
                 else {
                     try {
@@ -226,11 +320,31 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CreateGameResponse> call, Throwable t) {
+                customProgress.hideProgress();
                 Log.d("MM", t.getMessage()+"");
                 FancyToast.makeText(GameActivity.this, getString(R.string.systemError),
                         FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
             }
         });
+    }
+
+    private void openDialog() {
+        Intent intent= new Intent(this, DialogActivity.class);
+        intent.putExtra("type", "singleS");
+        intent.putExtra("title", "پیام");
+        intent.putExtra("text", "بازی پایان یافت");
+
+        startActivityForResult(intent, RESULT_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_CODE){
+            if(resultCode == RESULT_OK){
+                finish();
+            }
+        }
     }
 
     @Override

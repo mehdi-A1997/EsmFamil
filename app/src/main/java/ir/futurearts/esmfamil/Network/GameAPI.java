@@ -9,6 +9,7 @@ import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
 import ir.futurearts.esmfamil.Network.Responses.GamesResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -64,5 +65,26 @@ public interface GameAPI {
             @Field("id") int id,
             @Field("status") int status
     );
+
+    @POST("game.php/sendgamerequest")
+    @FormUrlEncoded
+    Call<ResponseBody> sendGameRequest(
+            @Field("uid") String uid,
+            @Field("oid") String oid,
+            @Field("gid") int gid
+    );
+
+    @GET("game.php/getgamerequest/{uid}")
+    Call<GamesResponse> getGameRequest(
+            @Path("uid") String  uid
+    );
+
+    @POST("game.php/deletegame")
+    @FormUrlEncoded
+    Call<ResponseBody> deleteGame(
+            @Field("gid") int gid,
+            @Field("type") int type
+    );
+
 
 }

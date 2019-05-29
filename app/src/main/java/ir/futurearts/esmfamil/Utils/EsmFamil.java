@@ -17,7 +17,7 @@ public class EsmFamil extends Application {
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("6NLO51kRttd6ZLazamem57BFdhCuk7i6O7DBWM7A")
                 .clientKey("qJ7fjTJWmlujYt3DZPMvKNwgmmfUzNsisGg4XlWf")
-                .server("https://parseapi.back4app.com")
+                .server("https://esmfamil.back4app.io")
                 .build()
         );
         Foreground.init(this);

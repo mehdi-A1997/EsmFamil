@@ -130,6 +130,7 @@ public class ResultFragment extends Fragment implements GameInterface {
         intent.putExtra("items", g.getItems());
         intent.putExtra("id", g.getId());
         intent.putExtra("letter", g.getLetter());
+        intent.putExtra("type", 0);
 
         startActivity(intent);
     }
