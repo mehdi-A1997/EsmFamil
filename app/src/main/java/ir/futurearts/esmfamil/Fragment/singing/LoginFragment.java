@@ -143,6 +143,8 @@ public class LoginFragment extends Fragment {
                             editor.putString("online", "1");
                             editor.putString("img", u.getImg());
                             editor.putString("score", u.getScore());
+                            editor.putString("coin", u.getCoin());
+                            editor.putString("token", u.getToken());
                             editor.putBoolean("login", true);
 
                             editor.commit();
@@ -156,6 +158,7 @@ public class LoginFragment extends Fragment {
                             CurrentUser.setScore(u.getScore());
                             CurrentUser.setCoin(u.getCoin());
                             CurrentUser.setLogin(true);
+                            CurrentUser.setToken(u.getToken());
 
                             startActivity(new Intent(getActivity(), MainActivity.class));
                         }

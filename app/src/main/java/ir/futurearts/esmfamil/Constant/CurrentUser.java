@@ -6,11 +6,9 @@ import android.content.SharedPreferences;
 import ir.futurearts.esmfamil.Module.UserM;
 
 public  class CurrentUser {
-    private static String id, name, email, username, img, online, score, coin;
+    private static String id, name, email, username, img, online, score, coin, token="";
     private static boolean login= false;
 
-    private static SharedPreferences mPref;
-    private static SharedPreferences.Editor editor;
 
     public CurrentUser() {
 
@@ -88,10 +86,12 @@ public  class CurrentUser {
         CurrentUser.coin = coin;
     }
 
-
-    public static void Logout(){
-        login= false;
-        editor.clear();
-        editor.commit();
+    public static String getToken() {
+        return token;
     }
+
+    public static void setToken(String token) {
+        CurrentUser.token = token;
+    }
+
 }

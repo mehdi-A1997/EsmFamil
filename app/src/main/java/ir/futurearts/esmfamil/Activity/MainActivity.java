@@ -8,21 +8,35 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Fragment.MainFragment;
 import ir.futurearts.esmfamil.Fragment.ResultFragment;
 import ir.futurearts.esmfamil.Fragment.SettingFragment;
+import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CurvedBottomView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener  {
 
@@ -32,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private float diff=0, origin=0;
     public CurvedBottomView nav;
     private Fragment f;
+
+    private static String TOPIC_GLOBAL= "global";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +61,44 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         fab3= findViewById(R.id.fab3);
         lin_id= findViewById(R.id.lin_id);
 
-        //nav.inflateMenu(R.menu.main);
         nav.setOnNavigationItemSelectedListener(this);
         changeFragment(1);
 
+        FirebaseApp.initializeApp(this);
+
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("MM", "getInstanceId failed", task.getException());
+                            return;
+                        }
+                        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_GLOBAL);
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        if(!CurrentUser.getToken().equals(token)){
+                            SharedPreferences.Editor editor= getSharedPreferences("user", MODE_PRIVATE).edit();
+                            editor.putString("token", token);
+                            CurrentUser.setToken(token);
+                            editor.commit();
+                            Call<ResponseBody> call= RetrofitClient.getInstance().getUserApi()
+                                    .setToken(CurrentUser.getId(), token);
+                            call.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     private void draw() {

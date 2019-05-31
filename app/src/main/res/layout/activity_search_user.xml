@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="150dp"
-    tools:context=".Activity.SearchUserActivity">
+    tools:context=".Activity.SearchUserActivity"
+    android:background="@color/white">
 
     <EditText
         android:id="@+id/search_user_txt"
@@ -24,7 +25,7 @@
         android:textSize="16sp"
         android:inputType="textPersonName"
         android:hint="نام کاریری را وارد کنید"
-        android:background="@drawable/edittext_accent_border_bg"/>
+        android:background="@drawable/edittext_green_border_bg"/>
 
     <Button
         android:id="@+id/search_user_btn"
@@ -33,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/accent_button_bg"
+        android:background="@drawable/btn_green"
         android:text="جستجو"
         android:textSize="18sp"
         android:fontFamily="@font/samim"

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -35,6 +36,7 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
     private ConstraintLayout searchbtn;
     private ConstraintLayout requestbtn;
     private NewtonCradleLoading progress;
+    private LinearLayout empty;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,8 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
         searchbtn= findViewById(R.id.friends_add);
         requestbtn= findViewById(R.id.friends_request);
         progress= findViewById(R.id.friends_progress);
+        empty= findViewById(R.id.friends_empty);
+
         progress.start();
         data = new ArrayList<>();
         adapter = new UserAdapter(data, this,this);
@@ -70,6 +74,13 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
                 progress.setVisibility(View.GONE);
                 adapter.notifyDataSetChanged();
                 list.setVisibility(View.VISIBLE);
+
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -78,6 +89,12 @@ public class FriendsActivity extends AppCompatActivity implements UserInterface 
                 progress.setVisibility(View.GONE);
                 FancyToast.makeText(FriendsActivity.this, getString(R.string.systemError),
                         FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
         });
 

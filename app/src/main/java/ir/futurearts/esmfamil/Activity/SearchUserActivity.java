@@ -66,10 +66,19 @@ public class SearchUserActivity extends AppCompatActivity {
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                         LoginResponse lr= response.body();
                         customProgress.hideProgress();
-                        if(lr.getUser().getUsername()!= null){
-                            SendRequest(lr.getUser());
+                        try {
+                            if(lr.getUser().getUsername()!= null){
+                                SendRequest(lr.getUser());
+                            }
+                            else {
+                                Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
+                                intent.putExtra("type","singleE");
+                                intent.putExtra("title","پیام");
+                                intent.putExtra("text","کاربر یافت نشد");
+                                startActivity(intent);
+                            }
                         }
-                        else {
+                        catch (Exception ignored){
                             Intent intent=new Intent(SearchUserActivity.this, DialogActivity.class);
                             intent.putExtra("type","singleE");
                             intent.putExtra("title","پیام");

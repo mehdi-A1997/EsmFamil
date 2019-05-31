@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
+import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +30,23 @@ public class FriendRequestActivity extends AppCompatActivity {
     private RecyclerView list;
     private List<UserM> data;
     private FriendRequestAdapter adapter;
+    private LinearLayout empty;
+    private NewtonCradleLoading progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_request);
 
         list= findViewById(R.id.friendrequest_rv);
+        empty= findViewById(R.id.friendsrequest_empty);
+        progress= findViewById(R.id.friendrequest_progress);
 
         data= new ArrayList<>();
         adapter= new FriendRequestAdapter(data, this);
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(this));
 
-        final CustomProgress customProgress= new CustomProgress();
-        customProgress.showProgress(this, false);
+        progress.start();
 
         Call<FriendsResponse> call= RetrofitClient.getInstance()
                 .getUserApi().friendRequests(CurrentUser.getId());
@@ -49,19 +55,35 @@ public class FriendRequestActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
                 FriendsResponse fr= response.body();
-
-                for(UserM u:fr.getUsers()){
-                    data.add(u);
+                try {
+                    assert fr != null;
+                    data.addAll(fr.getUsers());
+                    progress.stop();
+                    progress.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
                 }
-                customProgress.hideProgress();
-                adapter.notifyDataSetChanged();
+                catch (Exception ignored){
+                    progress.stop();
+                    progress.setVisibility(View.GONE);
+                }
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onFailure(Call<FriendsResponse> call, Throwable t) {
-                customProgress.hideProgress();
-                FancyToast.makeText(FriendRequestActivity.this, getString(R.string.systemError),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                progress.stop();
+                progress.setVisibility(View.GONE);
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
         });
     }

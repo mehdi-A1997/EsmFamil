@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.victor.loading.newton.NewtonCradleLoading;
@@ -35,6 +36,7 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
     private List<UserM> data;
     private UserAdapter adapter;
     private NewtonCradleLoading progress;
+    private LinearLayout empty;
 
     private Call<FriendsResponse> call;
 
@@ -50,6 +52,8 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
 
         list = findViewById(R.id.select_user_rv);
         progress= findViewById(R.id.select_user_proress);
+        empty= findViewById(R.id.selectfriend_empty);
+
         data = new ArrayList<>();
         adapter = new UserAdapter(data, this,this);
         list.setAdapter(adapter);
@@ -57,7 +61,6 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
 
         type= getIntent().getIntExtra("type", 0);
 
-        progress.start();
         if(type == 0){
             call= RetrofitClient.getInstance()
                     .getUserApi().getFriends(CurrentUser.getId());
@@ -66,7 +69,7 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
             call= RetrofitClient.getInstance()
                     .getUserApi().getOnlineFriends(CurrentUser.getId());
         }
-
+        progress.start();
         call.enqueue(new Callback<FriendsResponse>() {
             @Override
             public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
@@ -79,31 +82,26 @@ public class SelectFriendActivity extends AppCompatActivity implements UserInter
                 progress.stop();
                 progress.setVisibility(View.GONE);
                 adapter.notifyDataSetChanged();
-                list.setVisibility(View.VISIBLE);
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 progress.stop();
                 progress.setVisibility(View.GONE);
-                FancyToast.makeText(SelectFriendActivity.this, getString(R.string.systemError),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
         });
-        progress.stop();
-        progress.setVisibility(View.GONE);
-        adapter.notifyDataSetChanged();
-        list.setVisibility(View.VISIBLE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            data.sort(new Comparator<UserM>() {
-                @Override
-                public int compare(UserM o1, UserM o2) {
-                    return o1.getOnline()<o2.getOnline()?-1:0;
-                }
-            });
-        }
-        adapter.notifyDataSetChanged();
     }
 
     @Override

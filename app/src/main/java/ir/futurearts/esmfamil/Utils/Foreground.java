@@ -6,17 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
-import com.parse.ParseUser;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Foreground implements Application.ActivityLifecycleCallbacks {
 
-    public static final long CHECK_DELAY = 500;
-    public static final String TAG = Foreground.class.getName();
+     static final long CHECK_DELAY = 500;
+     static final String TAG = Foreground.class.getName();
 
     public interface Listener {
 
@@ -132,7 +128,6 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
                 if (foreground && paused) {
                     foreground = false;
                     Log.i(TAG, "went background");
-                    ParseUser user=ParseUser.getCurrentUser();
                     //TODO USER OFFLINE
                     for (Listener l : listeners) {
                         try {

@@ -40,6 +40,7 @@ public class SelectItemsFragment extends Fragment implements Step, SelectItemInt
     private List<ItemM> data;
 
     private CompleteGameCreationActivity game;
+    private int active=10;
 
     public SelectItemsFragment() {
         // Required empty public constructor
@@ -71,6 +72,9 @@ public class SelectItemsFragment extends Fragment implements Step, SelectItemInt
     @Nullable
     @Override
     public VerificationError verifyStep() {
+        if(active <3){
+            return new VerificationError("حداقل 3 مورد را انتخاب کنید");
+        }
         JSONObject object= new JSONObject();
         try {
             object.put("name", data.get(0).getActive1());
@@ -104,6 +108,10 @@ public class SelectItemsFragment extends Fragment implements Step, SelectItemInt
 
     @Override
     public void selectItem(ItemM i, int pos) {
+        if(data.get(pos).getActive())
+            active++;
+        else
+            active--;
         data.get(pos).setActive(i.getActive());
     }
 }

@@ -16,12 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.livequery.ParseLiveQueryClient;
-import com.parse.livequery.SubscriptionHandling;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
@@ -30,6 +24,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Module.ItemsM;
@@ -39,6 +34,12 @@ import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.Utils.CustomProgress;
 import ir.futurearts.esmfamil.Utils.DialogActivity;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,9 +60,13 @@ public class GameActivity extends AppCompatActivity {
 
     private CountDownTimer cdt;
     private int type= 0;
-    private ParseLiveQueryClient parseLiveQueryClient = null;
-    private ParseObject game= null;
     private CustomProgress customProgress;
+    private OkHttpClient client;
+    private WebSocket ws;
+    private Request request;
+    private boolean isConnect = false;
+    private boolean isFirst = true;
+    private ItemsM itemsM;
 
     private final int RESULT_CODE= 1001;
 
@@ -97,7 +102,7 @@ public class GameActivity extends AppCompatActivity {
 
         sendbtn= findViewById(R.id.game_btn);
 
-        ItemsM itemsM= (ItemsM) getIntent().getSerializableExtra("items");
+        itemsM= (ItemsM) getIntent().getSerializableExtra("items");
         GID= getIntent().getIntExtra("id", 0);
         letter.setText(getIntent().getStringExtra("letter"));
         type= getIntent().getIntExtra("type", 0);
@@ -180,17 +185,23 @@ public class GameActivity extends AppCompatActivity {
 
         if(type == 1) {
             cdt.cancel();
-            setListener();
+           setSocket();
+            setSocket();
         }
-        getgame();
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                if(type == 1)
                {
                    customProgress.showProgress(GameActivity.this,false);
-                   game.put("Status", "3");
-                   game.saveInBackground();
+                   JSONObject object= new JSONObject();
+                   try {
+                       object.put("id", GID+"");
+                       object.put("status", "4");
+                       ws.send(object.toString());
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
                }
                else
                    prepareResult();
@@ -198,55 +209,19 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    private void getgame() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
-        query.whereEqualTo("Gid", GID+"");
 
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if(e == null){
-                    game= object;
-                }else {
-                    Log.d("MM", "Error Update");
-                    Log.d("MM", e.getMessage());
-                    getgame();
-                }
-            }
-        });
-    }
-
-    private void setListener() {
+    private void setSocket() {
+        client =  new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+        request = new Request.Builder().url("ws://connect.websocket.in/futurearts_esmfamil?room_id=1375").build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        ws = client.newWebSocket(request, listener);
+        JSONObject object= new JSONObject();
         try {
-            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://esmfamil.back4app.io/"));
-        } catch (URISyntaxException e) {
+            object.put("id", "test");
+            object.put("status", "3");
+            ws.send(object.toString());
+        } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("MM", "Error Listen");
-        }
-
-
-        if (parseLiveQueryClient != null) {
-            if (parseLiveQueryClient != null) {
-                ParseQuery parseQuery = new ParseQuery("Games");
-                parseQuery.whereEqualTo("Gid", GID+"");
-                Log.d("MM", "Start Listening");
-                SubscriptionHandling subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
-
-                subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-                    @Override
-                    public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            public void run() {
-                                String status = object.getString("Status");
-                                Log.d("MM", status);
-                                prepareResult();
-                                customProgress.showProgress(GameActivity.this,false);
-                            }
-                        });
-                    }
-                });
-            }
         }
     }
 
@@ -262,6 +237,37 @@ public class GameActivity extends AppCompatActivity {
         String fruit= tfruit.getText().toString();
         String color= tcolor.getText().toString();
         String obj= tobject.getText().toString();
+
+        if(!itemsM.getName().equals("0"))
+            name= "-1";
+
+        if(!itemsM.getFamily().equals("0"))
+           family= "-1";
+
+        if(!itemsM.getCity().equals("0"))
+           city= "-1";
+
+        if(!itemsM.getCountry().equals("0"))
+            country= "-1";
+
+        if(!itemsM.getFood().equals("0"))
+            food= "-1";
+
+        if(!itemsM.getAnimal().equals("0"))
+            animal= "-1";
+
+        if(!itemsM.getColor().equals("0"))
+            color= "-1";
+
+        if(!itemsM.getFruit().equals("0"))
+            fruit= "-1";
+
+        if(!itemsM.getFlower().equals("0"))
+            flower= "-1";
+
+        if(!itemsM.getObject().equals("0"))
+            obj= "-1";
+
 
         JSONObject object= new JSONObject();
         try {
@@ -286,20 +292,17 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void sendResult(JSONObject object) {
-
-        Call<CreateGameResponse> call= RetrofitClient.getInstance()
+        Log.d("MM", object.toString());
+        Call<ResponseBody> call= RetrofitClient.getInstance()
                 .getGameApi().setGameResult(GID, CurrentUser.getId(), object, Integer.parseInt(timer.getText().toString()));
 
-        call.enqueue(new Callback<CreateGameResponse>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CreateGameResponse> call, Response<CreateGameResponse> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 customProgress.hideProgress();
                 if(response.code() == 200){
-                    CreateGameResponse cgr= response.body();
-
                     if(type == 0){
                         Intent intent= new Intent();
-                        intent.putExtra("game", cgr.getGame());
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -319,7 +322,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<CreateGameResponse> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 customProgress.hideProgress();
                 Log.d("MM", t.getMessage()+"");
                 FancyToast.makeText(GameActivity.this, getString(R.string.systemError),
@@ -329,6 +332,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void openDialog() {
+        ws.close(1000, null);
+        client.dispatcher().executorService().shutdown();
         Intent intent= new Intent(this, DialogActivity.class);
         intent.putExtra("type", "singleS");
         intent.putExtra("title", "پیام");
@@ -351,5 +356,45 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cdt.cancel();
+    }
+
+    private final class EchoWebSocketListener extends WebSocketListener {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+        @Override
+        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
+            Log.d("MM", "Open:"+response.message());
+            isConnect= true;
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            Log.d("MM", "Message: "+ text);
+            try {
+                JSONObject object= new JSONObject(text);
+                if(object.getString("id").equals(GID+"") &&
+                        object.getString("status").equals("4"))
+                    if(isFirst){
+                        prepareResult();
+                        isFirst= false;
+                    }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+
+        }
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            Log.d("MM", "Socket Close");
+        }
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
+            Log.d("MM", t.getMessage()+"");
+            if(!isConnect)
+                setSocket();
+        }
     }
 }

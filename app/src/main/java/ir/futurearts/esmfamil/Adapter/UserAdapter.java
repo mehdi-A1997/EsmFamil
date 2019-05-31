@@ -1,6 +1,8 @@
 package ir.futurearts.esmfamil.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
             uimg.setImageBitmap(null);
             uimg.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.ic_nouser));
 
-            //TODO SET USER IMG
+            uimg.setImageDrawable(getDrawableByName(u.getImg()));
 
             if(u.getOnline()!=1){
                 online.setVisibility(View.GONE);
@@ -94,5 +96,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.myHolder> {
                     }
                 });
         }
+    }
+    private Drawable getDrawableByName(String name){
+        Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier(name, "drawable", context.getPackageName());
+        return ContextCompat.getDrawable(context,resourceId);
     }
 }

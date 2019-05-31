@@ -3,8 +3,6 @@ package ir.futurearts.esmfamil.Utils;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.parse.Parse;
-
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 
 public class EsmFamil extends Application {
@@ -13,14 +11,6 @@ public class EsmFamil extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("6NLO51kRttd6ZLazamem57BFdhCuk7i6O7DBWM7A")
-                .clientKey("qJ7fjTJWmlujYt3DZPMvKNwgmmfUzNsisGg4XlWf")
-                .server("https://esmfamil.back4app.io")
-                .build()
-        );
-        Foreground.init(this);
 
         mPref=getSharedPreferences("user",MODE_PRIVATE);
         editor=mPref.edit();

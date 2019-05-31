@@ -1,6 +1,7 @@
 package ir.futurearts.esmfamil.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,7 +92,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
 
             }
 
-            //TODO SET USER IMG
+            uimg.setImageDrawable(getDrawableByName(u.getImg()));
 
             online.setVisibility(View.GONE);
             name.setText(u.getName());
@@ -112,5 +113,11 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.myHolder> {
         if(id.equals(CurrentUser.getId()))
             return;
         adi.SendRequest(id);
+    }
+
+    private Drawable getDrawableByName(String name){
+        Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier(name, "drawable", context.getPackageName());
+        return ContextCompat.getDrawable(context,resourceId);
     }
 }

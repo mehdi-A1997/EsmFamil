@@ -7,7 +7,7 @@
     tools:context=".Fragment.MainFragment"
     android:background="@drawable/main_bg">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/coin_ic"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -68,15 +68,33 @@
         android:textStyle="bold"
         android:fontFamily="@font/shabnam"/>
 
-    <ImageView
-        android:id="@+id/main_requests"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_req"
-        app:layout_constraintStart_toEndOf="@id/coin_text"
-        app:layout_constraintEnd_toStartOf="@id/main_uscore"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/coin_text"
+            app:layout_constraintEnd_toStartOf="@id/main_uscore"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/main_requests"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_req"
+
+                app:layout_constraintStart_toEndOf="@id/coin_text"
+                app:layout_constraintEnd_toStartOf="@id/main_help"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/main_help"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_help_black_24dp"
+                app:layout_constraintStart_toEndOf="@id/main_requests"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"

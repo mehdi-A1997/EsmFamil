@@ -137,4 +137,21 @@ public interface UserAPI {
     Call<ResponseBody> getScore(
             @Path("id") String id
     );
+
+    // Set notification Token
+
+    @POST("user.php/settoken")
+    @FormUrlEncoded
+    Call<ResponseBody> setToken(
+            @Field("id") String id,
+            @Field("token") String token
+    );
+
+    // Add Coin
+    @POST("user.php/addcoin")
+    @FormUrlEncoded
+    Call<ResponseBody> addCoin(
+            @Field("id") String id,
+            @Field("count") int count
+    );
 }

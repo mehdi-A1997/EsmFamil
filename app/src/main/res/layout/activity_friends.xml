@@ -95,6 +95,33 @@
         app:layout_constraintTop_toBottomOf="@+id/friends_request"
         android:visibility="visible"/>
 
+        <LinearLayout
+            android:id="@+id/friends_empty"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/friends_request"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/empty"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/parastoo"
+                android:text="شما دوستی ندارید"/>
+        </LinearLayout>
+
         <com.victor.loading.newton.NewtonCradleLoading
             android:id="@+id/friends_progress"
             android:layout_width="wrap_content"

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.victor.loading.newton.NewtonCradleLoading;
@@ -36,6 +37,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
     private List<UserM>data;
     private RankAdapter adapter;
     private NewtonCradleLoading progress;
+    private LinearLayout empty;
 
     private final int SEND_CODE=1001;
 
@@ -44,8 +46,9 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank);
-        list=findViewById(R.id.rank_rv);
-        progress=findViewById(R.id.rank_progress);
+        list= findViewById(R.id.rank_rv);
+        progress= findViewById(R.id.rank_progress);
+        empty= findViewById(R.id.rank_empty);
         data=new ArrayList<>();
         adapter=new RankAdapter(data,this,this);
 
@@ -64,23 +67,38 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
             public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
 
                 FriendsResponse fr= response.body();
-                Log.d("MM",fr.getMessage());
-                Log.d("MM",fr.getUsers().size()+"");
-                for(UserM u: fr.getUsers()){
-                    data.add(u);
+                try {
+                    assert fr != null;
+                    data.addAll(fr.getUsers());
+                    progress.stop();
+                    progress.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                    list.setVisibility(View.VISIBLE);
+                }
+                catch (Exception ignored){
+
+                }
+
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
                 }
                 progress.stop();
                 progress.setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
-                list.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 progress.stop();
                 progress.setVisibility(View.GONE);
-                FancyToast.makeText(RankActivity.this, getString(R.string.systemError),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
         });
     }

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import ir.futurearts.esmfamil.Network.Responses.CreateGameResponse;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
+import ir.futurearts.esmfamil.Network.Responses.DetailResponse;
 import ir.futurearts.esmfamil.Network.Responses.GamesResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -16,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface GameAPI {
 
@@ -52,7 +54,7 @@ public interface GameAPI {
 
     @PUT("game.php/setgameresult")
     @FormUrlEncoded
-    Call<CreateGameResponse> setGameResult(
+    Call<ResponseBody> setGameResult(
             @Field("id") int id,
             @Field("uid") String uid,
             @Field("items") JSONObject items,
@@ -84,6 +86,14 @@ public interface GameAPI {
     Call<ResponseBody> deleteGame(
             @Field("gid") int gid,
             @Field("type") int type
+    );
+
+    @POST("game.php/getdetails")
+    @FormUrlEncoded
+    Call<DetailResponse> getDetail(
+            @Field("id") String gid,
+            @Field("uid") String uid,
+            @Field("oid") String oid
     );
 
 

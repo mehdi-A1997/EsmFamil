@@ -20,6 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,6 +95,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
+        final CustomProgress progress= new CustomProgress();
+        progress.showProgress(this, false);
         int changed =0;
         if(!username.getText().toString().equals(CurrentUser.getUsername())){
             changed= 1;
@@ -131,12 +134,14 @@ public class ProfileActivity extends AppCompatActivity {
                     FancyToast.makeText(ProfileActivity.this, getString(R.string.systemError),
                             FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
+                progress.hideProgress();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 FancyToast.makeText(ProfileActivity.this, getString(R.string.systemError),
                         FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                progress.hideProgress();
             }
         });
     }

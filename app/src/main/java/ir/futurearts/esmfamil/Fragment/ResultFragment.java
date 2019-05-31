@@ -3,28 +3,20 @@ package ir.futurearts.esmfamil.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
+import android.widget.LinearLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
-
+import com.victor.loading.newton.NewtonCradleLoading;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
-
-import ir.futurearts.esmfamil.Activity.CompleteGameCreationActivity;
 import ir.futurearts.esmfamil.Activity.GameActivity;
+import ir.futurearts.esmfamil.Activity.GameResultActivity;
 import ir.futurearts.esmfamil.Adapter.GameAdapter;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Interface.GameInterface;
@@ -49,9 +41,12 @@ public class ResultFragment extends Fragment implements GameInterface {
     private RecyclerView list;
     private GameAdapter adapter;
     private LinkedList<GameM> data;
+    private LinearLayout empty;
+    private NewtonCradleLoading progress;
+    private Call<GamesResponse> call;
 
     private final int MANAGE_CODE= 1001;
-
+    int lastpos=0;
     //for manage game
     private int pos;
     private GameM game;
@@ -67,13 +62,18 @@ public class ResultFragment extends Fragment implements GameInterface {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_result, container, false);
         list= v.findViewById(R.id.result_rv);
+        empty= v.findViewById(R.id.result_empty);
+        progress= v.findViewById(R.id.result_progress);
+
         data= new LinkedList<>();
         adapter= new GameAdapter(data, getContext(), this);
 
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Call<GamesResponse> call= RetrofitClient.getInstance()
+
+        progress.start();
+        call = RetrofitClient.getInstance()
                 .getGameApi().getMyGames(CurrentUser.getId());
 
         call.enqueue(new Callback<GamesResponse>() {
@@ -86,39 +86,49 @@ public class ResultFragment extends Fragment implements GameInterface {
                         if(g.getStatus() == 1) {
                             if ((g.getUid() + "").equals(CurrentUser.getId()) && g.getUscore() == -1) {
                                 data.addFirst(g);
+                                lastpos++;
                             } else if ((g.getOid() + "").equals(CurrentUser.getId()) && g.getOscore() == -1) {
                                 data.addFirst(g);
+                                lastpos++;
                             }
                             else
-                                data.add(data.size(), g);
+                                data.add(lastpos, g);
 
                         }
                         else  if(CurrentUser.getId().equals(g.getOid()+"") && g.getStatus() == 9){
                             data.addFirst(g);
+                            lastpos++;
                         }
                         else{
-                            data.add(data.size(), g);
+                            data.add(lastpos, g);
                         }
                     }
 
                     adapter.notifyDataSetChanged();
                 }
-                else{
-                    try {
-                        DefaultResponse df= new DefaultResponse(response.errorBody().string());
-                        FancyToast.makeText(getContext(), df.getMessage(),
-                                FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                progress.stop();
+                progress.setVisibility(View.GONE);
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
                 }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
+
             }
 
             @Override
             public void onFailure(Call<GamesResponse> call, Throwable t) {
+                progress.stop();
+                progress.setVisibility(View.GONE);
                 Log.d("MM", t.getMessage()+"");
-                FancyToast.makeText(getContext(), getString(R.string.systemError),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
+                if(data.size() == 0){
+                    empty.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty.setVisibility(View.GONE);
+                }
             }
         });
         return v;
@@ -149,7 +159,12 @@ public class ResultFragment extends Fragment implements GameInterface {
 
     @Override
     public void CompleteDetail(GameM g) {
-        Toast.makeText(getContext(), "Detail", Toast.LENGTH_SHORT).show();
+        Intent intent= new Intent(getContext(), GameResultActivity.class);
+        intent.putExtra("id", g.getId()+"");
+        intent.putExtra("uid", g.getUid()+"");
+        intent.putExtra("oid", g.getOid()+"");
+
+        startActivity(intent);
     }
 
     @Override
@@ -193,6 +208,7 @@ public class ResultFragment extends Fragment implements GameInterface {
                         e.printStackTrace();
                     }
                 }
+
             }
 
             @Override
@@ -200,7 +216,14 @@ public class ResultFragment extends Fragment implements GameInterface {
                 Log.d("MM", t.getMessage()+"");
                 FancyToast.makeText(getContext(), getString(R.string.systemError),
                         FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        call.cancel();
     }
 }

@@ -8,11 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -52,6 +47,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
     //Created Game ID
     private GameM game;
     private CustomProgress customProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +103,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
 
     private void CreateNormalGame() {
 
-        String oid= data.getString("oid");
+        final String oid= data.getString("oid");
         String uid= CurrentUser.getId();
 
         Call<CreateGameResponse> call= RetrofitClient.getInstance()
@@ -125,14 +121,15 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
                     }
                     else {
                         game= response.body().getGame();
-                        CreateCompetGame(game.getId()+"");
+                        sendGameRequest(oid);
                     }
                 }
                 else {
                     customProgress.hideProgress();
                     try {
                         DefaultResponse df= new DefaultResponse(response.errorBody().string());
-                        FancyToast.makeText(CompleteGameCreationActivity.this, df.getMessage(),
+                        Log.d("MM", df.getMessage()+"");
+                        FancyToast.makeText(CompleteGameCreationActivity.this, getString(R.string.systemError),
                                 FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -171,7 +168,8 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
                 else {
                     try {
                         DefaultResponse df= new DefaultResponse(response.errorBody().string());
-                        FancyToast.makeText(CompleteGameCreationActivity.this, df.getMessage(),
+                        Log.d("MM", df.getMessage()+"");
+                        FancyToast.makeText(CompleteGameCreationActivity.this, getString(R.string.systemError),
                                 FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -189,48 +187,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
         });
     }
 
-    private void CreateCompetGame(String  id) {
-        Log.d("MM", "Start");
 
-        final String oid= data.getString("oid");
-
-        ParseObject entity = new ParseObject("Games");
-
-        entity.put("Uid", CurrentUser.getId());
-        entity.put("Oid", oid);
-        entity.put("Status", "0");
-        entity.put("Letter", letter);
-        entity.put("Gid", id);
-
-        entity.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e == null){
-                    sendGameRequest(oid);
-                }
-                else {
-                    Log.d("MM",e.getMessage()+"/Game");
-                    deleteGame(1);
-                }
-            }
-        });
-    }
-
-
-    private String getGid(String gid) {
-        ParseQuery<ParseObject> specificPostQuery = ParseQuery.getQuery("Games");
-        specificPostQuery.whereEqualTo("Gid", gid);
-
-        try {
-            ParseObject object=specificPostQuery.getFirst();
-            return object.getObjectId();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.d("MM",e.getMessage()+"/GID");
-        }
-
-        return null;
-    }
 
     private void sendGameRequest(final String oid) {
         Call<ResponseBody> call= RetrofitClient.getInstance()
@@ -262,7 +219,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
     private void waitForAccept(String  gid) {
         customProgress.hideProgress();
        Intent intent= new Intent(this, WaitForAcceptActivity.class);
-       intent.putExtra("gid", gid);
+       intent.putExtra("gid", gid+"");
         startActivityForResult(intent, ACCEPT_CODE);
     }
 
@@ -284,30 +241,11 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
             }
             else {
                 customProgress.showProgress(this, false);
-                cancleGame();
+                deleteGame(1);
             }
         }
     }
 
-    private void cancleGame() {
-        String gid= getGid(game.getId()+"");
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
-
-        // Retrieve the object by id
-        query.getInBackground(gid, new GetCallback<ParseObject>() {
-            public void done(ParseObject entity, ParseException e) {
-                if (e == null) {
-                   entity.deleteInBackground();
-                   deleteGame(1);
-                }
-                else {
-                    customProgress.hideProgress();
-                }
-            }
-        });
-
-    }
 
     private void deleteGame(int t){
         Call<ResponseBody> call= RetrofitClient.getInstance()
@@ -318,7 +256,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 customProgress.hideProgress();
                 if(response.code() == 200){
-                    //TODO Game Deleted And Finish
+                  finish();
                 }
                 else{
                     FancyToast.makeText(CompleteGameCreationActivity.this,  getString(R.string.systemError),

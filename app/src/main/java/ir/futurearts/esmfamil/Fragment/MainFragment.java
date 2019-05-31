@@ -1,10 +1,15 @@
 package ir.futurearts.esmfamil.Fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -14,24 +19,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.CompleteGameCreationActivity;
 import ir.futurearts.esmfamil.Activity.FriendsActivity;
 import ir.futurearts.esmfamil.Activity.GameRequestActivity;
+import ir.futurearts.esmfamil.Activity.MainActivity;
 import ir.futurearts.esmfamil.Activity.RankActivity;
 import ir.futurearts.esmfamil.Activity.SelectFriendActivity;
+import ir.futurearts.esmfamil.Activity.StoreActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Network.Responses.CreateGameResponse;
 import ir.futurearts.esmfamil.Network.Responses.DefaultResponse;
@@ -59,10 +62,11 @@ public class MainFragment extends Fragment {
     private TextView coin,score;
     private CircleImageView uimg;
     private ImageView requests;
+    private CircleImageView coin_ic;
 
     private final int NORMAL_CODE = 1001;
-    private final int NORMALRANDOM_GAME= 1002;
-    private final int COMPETE_CODE = 1003;
+    private final int NORMALRANDOM_GAME = 1002;
+    private final int COIN_CODE = 1003;
 
 
     public MainFragment() {
@@ -84,15 +88,14 @@ public class MainFragment extends Fragment {
         score= v.findViewById(R.id.main_uscore);
         uimg= v.findViewById(R.id.main_uimg);
         requests= v.findViewById(R.id.main_requests);
+        coin_ic= v.findViewById(R.id.coin_ic);
+
+        uimg.setImageDrawable(getDrawableByName(CurrentUser.getImg()));
 
         competgame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), OptionsActivity.class);
-                String[] data = new String[]{"بازی تصادفی", "بازی با دوستان"};
-                intent.putExtra("list", data);
-
-                startActivityForResult(intent, COMPETE_CODE);
+                selectFriendCompete();
             }
         });
 
@@ -129,9 +132,28 @@ public class MainFragment extends Fragment {
             }
         });
 
+        coin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openStore();
+            }
+        });
+
+        coin_ic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openStore();
+            }
+        });
+
         getmyScore();
         return v;
     }
+
+    private void openStore() {
+        startActivityForResult(new Intent(getContext(), StoreActivity.class), COIN_CODE);
+    }
+
     private void getmyScore() {
         Call<ResponseBody> call= RetrofitClient.getInstance()
                 .getUserApi().getScore(CurrentUser.getId());
@@ -144,6 +166,12 @@ public class MainFragment extends Fragment {
                         JSONObject object= new JSONObject(response.body().string());
                         coin.setText(object.getString("coin"));
                         score.setText(object.getString("score"));
+                        SharedPreferences.Editor editor= Objects.requireNonNull(getContext()).getSharedPreferences("user", Context.MODE_PRIVATE).edit();
+                        editor.putString("coin", object.getString("coin"));
+                        editor.putString("score", object.getString("score"));
+                        CurrentUser.setCoin(object.getString("coin"));
+                        CurrentUser.setScore(object.getString("score"));
+                        editor.apply();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -188,20 +216,12 @@ public class MainFragment extends Fragment {
             }
         }
 
-        if(requestCode == COMPETE_CODE){
-            if(resultCode==RESULT_OK){
-                int item=Integer.parseInt(data.getStringExtra("item"));
-                switch (item){
-                    case 0:
-                        createRandomGameCompete();
-                        break;
-
-                    case 1:
-                        selectFriendCompete();
-                        break;
-                }
+        if(requestCode == COIN_CODE){
+            if(resultCode == RESULT_OK){
+                getmyScore();
             }
         }
+
     }
 
 
@@ -266,23 +286,9 @@ public class MainFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void createRandomGameCompete() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
-
-        // The query will search for a ParseObject, given its objectId.
-        // When the query finishes running, it will invoke the GetCallback
-        // with either the object, or the exception thrown
-        query.getInBackground("lKsxj89agL", new GetCallback<ParseObject>() {
-            public void done(ParseObject result, ParseException e) {
-                if (e == null) {
-                    Toast.makeText(getContext(), result.getString("Status"), Toast.LENGTH_SHORT).show();
-                } else {
-                    // something went wrong
-                    Log.d("MM", e.getMessage());
-                }
-            }
-        });
+    private Drawable getDrawableByName(String name){
+        Resources resources = getResources();
+        final int resourceId = resources.getIdentifier(name, "drawable", getContext().getPackageName());
+        return ContextCompat.getDrawable(getContext(),resourceId);
     }
-
-
 }

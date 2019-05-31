@@ -12,8 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.Activity.GameDetailsActivity;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
@@ -22,6 +26,7 @@ import ir.futurearts.esmfamil.Module.GameM;
 import ir.futurearts.esmfamil.Network.Responses.LoginResponse;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.TimeAgo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +62,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.myHolder> {
 
     class myHolder extends RecyclerView.ViewHolder{
         private CircleImageView uimg, oimg;
-        private TextView uname, oname, uscore, oscore, result, letter;
+        private TextView uname, oname, uscore, oscore, result, letter, time;
         private View v, indicator;
         private LinearLayout sec;
         public myHolder(@NonNull View itemView) {
@@ -73,9 +78,23 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.myHolder> {
             letter= itemView.findViewById(R.id.game_letter);
             indicator= itemView.findViewById(R.id.game_indicator);
             sec= itemView.findViewById(R.id.game_sec);
+            time= itemView.findViewById(R.id.game_time);
         }
 
         public void set(final GameM g, final int pos) {
+
+            String myDate = g.getTimestamp();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date dt = null;
+            try {
+                dt = sdf.parse(myDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert dt != null;
+            long millis = dt.getTime();
+            TimeAgo timeAgo=new TimeAgo(context);
+            time.setText(timeAgo.timeAgo(millis));
 
             if((g.getUid()+"").equals(CurrentUser.getId())){
                 uname.setText(CurrentUser.getUsername());

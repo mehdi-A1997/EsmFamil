@@ -33,6 +33,7 @@ public class GameDetailsActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
 
         ItemsM itemsM= (ItemsM) getIntent().getSerializableExtra("item");
+        Log.d("MM", itemsM.getCity());
         data.add(new ItemM("اسم", Integer.parseInt(itemsM.getName())));
         data.add(new ItemM("فامیل", Integer.parseInt(itemsM.getFamily())));
         data.add(new ItemM("شهر", Integer.parseInt(itemsM.getCity())));

@@ -15,6 +15,7 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 import ir.futurearts.esmfamil.Constant.CurrentUser;
 import ir.futurearts.esmfamil.Network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
+import ir.futurearts.esmfamil.Utils.CustomProgress;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         newpass= findViewById(R.id.profile_newpass);
         newpassc= findViewById(R.id.profile_newpassconfirm);
         btnsave= findViewById(R.id.profile_savepass);
+
+        btnsave.setBackground(ContextCompat.getDrawable(ChangePasswordActivity.this,R.drawable.disable_btn));
+        btnsave.setEnabled(false);
 
         newpass.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,6 +106,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void changePass( String spass, String npass ) {
+        final CustomProgress progress=  new CustomProgress();
+        progress.showProgress(this, false);
         Call<ResponseBody> call= RetrofitClient.getInstance()
                 .getUserApi().changePassword(CurrentUser.getId(), spass, npass);
 
@@ -121,11 +127,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     FancyToast.makeText(ChangePasswordActivity.this, getString(R.string.systemError),
                             FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
+                progress.hideProgress();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                FancyToast.makeText(ChangePasswordActivity.this, getString(R.string.systemError),
+                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                progress.hideProgress();
             }
         });
     }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "288655037529",
+    "firebase_url": "https://esmfamil-723e7.firebaseio.com",
+    "project_id": "esmfamil-723e7",
+    "storage_bucket": "esmfamil-723e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288655037529:android:d792a2940d7b37cb",
+        "android_client_info": {
+          "package_name": "ir.futurearts.esmfamil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288655037529-vsd0jhdeb765cj7t6igip5dggkvc3ab5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ir.futurearts.esmfamil",
+            "certificate_hash": "d9bccf9405904d116bf7e71a9e945c17fbba7a51"
+          }
+        },
+        {
+          "client_id": "288655037529-m7gfibe7au2oi4qd9h8cvvkindj3nb0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPpiw9QEdBfsfmBNnap9ExGDnvboU7OZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "288655037529-m7gfibe7au2oi4qd9h8cvvkindj3nb0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

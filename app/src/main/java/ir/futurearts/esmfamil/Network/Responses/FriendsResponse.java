@@ -7,7 +7,7 @@ import ir.futurearts.esmfamil.Module.UserM;
 public class FriendsResponse {
     private boolean error;
     private String message;
-    private List<UserM> users;
+    private List<UserM> users= null;
 
 
     public FriendsResponse(boolean error, String message, List<UserM> users) {
