@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.MainFragment"
+    tools:context=".fragment.MainFragment"
     android:background="@drawable/main_bg">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="@id/coin_ic"
         app:layout_constraintBottom_toBottomOf="@id/coin_ic"
         android:textColor="@color/white"
-        android:text="100"
+        android:text="0"
         android:textSize="14sp"
         android:textStyle="bold"
         android:fontFamily="@font/shabnam"
@@ -47,7 +47,8 @@
         android:layout_marginEnd="8dp"
         android:src="@mipmap/ic_nouser"
         app:civ_border_color="@color/white"
-        app:civ_border_width="2dp"/>
+        app:civ_border_width="2dp"
+        android:transitionName="result_activity_transition"/>
 
     <TextView
         android:id="@+id/main_uscore"
@@ -63,7 +64,7 @@
         android:paddingLeft="5dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:text="500"
+        android:text="0"
         android:textSize="14sp"
         android:textStyle="bold"
         android:fontFamily="@font/shabnam"/>

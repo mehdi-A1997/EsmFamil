@@ -4,7 +4,7 @@
     android:layout_width="250dp"
     android:layout_height="350dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.singing.LoginFragment"
+    tools:context=".fragment.singing.LoginFragment"
     android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout

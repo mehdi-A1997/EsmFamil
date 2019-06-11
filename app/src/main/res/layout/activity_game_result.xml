@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.GameResultActivity"
+    tools:context=".activity.GameResultActivity"
     android:background="@drawable/main_bg">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_rv"

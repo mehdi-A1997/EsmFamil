@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="400dp"
-    tools:context=".Activity.StoreActivity">
+    tools:context=".activity.StoreActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/store_rv"

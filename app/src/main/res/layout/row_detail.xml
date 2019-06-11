@@ -13,6 +13,7 @@
         android:layout_height="30dp"
         android:gravity="center"
         android:text="اسم"
+        android:layout_marginBottom="4dp"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:fontFamily="@font/ziba"

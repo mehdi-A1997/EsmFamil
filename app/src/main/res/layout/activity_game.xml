@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.GameActivity"
+    tools:context=".activity.GameActivity"
     android:background="#3949AB">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -416,7 +416,6 @@
                         android:fontFamily="@font/vazir"
                         android:inputType="textPersonName"
                         android:padding="6dp"
-                        android:text="مهدی"
                         android:textAlignment="viewEnd"
                         android:textColor="@color/white"
                         android:textSize="18sp"

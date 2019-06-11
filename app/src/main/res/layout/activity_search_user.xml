@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="150dp"
-    tools:context=".Activity.SearchUserActivity"
+    tools:context=".activity.SearchUserActivity"
     android:background="@color/white">
 
     <EditText
@@ -20,7 +20,7 @@
         android:padding="8dp"
         android:textAlignment="center"
         android:fontFamily="@font/shabnam"
-        android:textColor="@color/white"
+        android:textColor="@android:color/black"
         android:textColorHint="@color/gray"
         android:textSize="16sp"
         android:inputType="textPersonName"

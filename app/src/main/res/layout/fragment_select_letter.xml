@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/main_bg"
-    tools:context=".Fragment.stepper.SelectLetterFragment">
+    tools:context=".fragment.stepper.SelectLetterFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView

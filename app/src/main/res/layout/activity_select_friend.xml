@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="300dp"
-    tools:context=".Activity.SelectFriendActivity"
+    tools:context=".activity.SelectFriendActivity"
     android:background="@drawable/main_bg">
 
     <androidx.recyclerview.widget.RecyclerView

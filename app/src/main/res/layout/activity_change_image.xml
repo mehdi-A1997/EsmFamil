@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="400dp"
-    tools:context=".Activity.ChangeImageActivity">
+    tools:context=".activity.ChangeImageActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/images_rv"

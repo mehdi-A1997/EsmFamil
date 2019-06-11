@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.FriendRequestActivity"
+    tools:context=".activity.FriendRequestActivity"
     android:background="@drawable/main_bg">
 
     <androidx.recyclerview.widget.RecyclerView

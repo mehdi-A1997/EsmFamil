@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="180dp"
-    tools:context=".Utils.DialogActivity"
+    tools:context=".utils.DialogActivity"
     android:background="@color/white">
 
     <ImageView

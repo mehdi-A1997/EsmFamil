@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
-    tools:context=".Activity.MainActivity" >
+    tools:context=".activity.MainActivity" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/main_bootomview"/>
 
-    <ir.futurearts.esmfamil.Utils.CurvedBottomView
+    <ir.futurearts.esmfamil.utils.CurvedBottomView
         android:id="@+id/main_bootomview"
         android:layout_width="0dp"
         android:layout_height="65dp"

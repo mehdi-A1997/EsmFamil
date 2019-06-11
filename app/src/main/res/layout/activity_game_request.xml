@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="350dp"
-    tools:context=".Activity.GameRequestActivity">
+    tools:context=".activity.GameRequestActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gamerequest_rv"

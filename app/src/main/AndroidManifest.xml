@@ -7,52 +7,18 @@
     <uses-permission android:name="ir.mservices.market.BILLING" />
 
     <application
-        android:name=".Utils.EsmFamil"
+        android:name=".utils.EsmFamil"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.StoreActivity"
-            android:theme="@style/AppTheme.Dialog"/>
-        <activity android:name=".Activity.GameResultActivity" />
-        <activity
-            android:name=".Activity.GameRequestActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".Activity.WaitForAcceptActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity android:name=".Activity.AboutActivity" />
-        <activity
-            android:name=".Activity.ChangePasswordActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".Activity.ChangeImageActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity android:name=".Activity.ProfileActivity" />
-        <activity android:name=".Activity.GameActivity" />
-        <activity
-            android:name=".Activity.GameDetailsActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".Activity.SelectFriendActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity android:name=".Activity.CompleteGameCreationActivity" />
-        <activity
-            android:name=".Utils.OptionsActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".Activity.SearchUserActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity android:name=".Activity.FriendRequestActivity" />
-        <activity android:name=".Activity.FriendsActivity" />
-        <activity
-            android:name=".Utils.DialogActivity"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity android:name=".Activity.RankActivity" />
-        <activity android:name=".Activity.LoginActivity" />
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".activity.UserResultActivity"
+                android:theme="@style/AppTheme.trasnparent" />
+        <activity android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +26,107 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Utils.MyFirebaseMessagingService">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1398806565081490~4957685858" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ecb7da0f512bf38c8c3676e9fc74b4a01cfe0ffe"
+            />
+
+        <activity
+            android:name=".activity.HelpActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.StoreActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.GameResultActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.GameRequestActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.WaitForAcceptActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.ChangeImageActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.GameActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.GameDetailsActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.SelectFriendActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.CompleteGameCreationActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".utils.OptionsActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.SearchUserActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.FriendRequestActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.FriendsActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".utils.DialogActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".activity.RankActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
+            <intent-filter android:label="Esm Famil">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data android:scheme="http"
+                    android:host="www.future-arts.ir"
+                    android:pathPrefix="/Esmfamil" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data android:scheme="future-arts"
+                    android:host="esmfamil" />
+
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".utils.MyFirebaseMessagingService"
+            android:permission="android.permission.INSTALL_PACKAGES"
+            >
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@mipmap/ic_launcher" />
@@ -69,7 +135,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Utils.MyFirebaseInstanceIdService">
+        <service
+            android:name=".utils.MyFirebaseInstanceIdService"
+            android:permission="android.permission.INSTALL_PACKAGES">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.SettingFragment"
+    tools:context=".fragment.SettingFragment"
     android:background="@drawable/main_bg">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -121,6 +121,42 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="8dp"
                         android:src="@mipmap/ic_aboutus" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/setting_store"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/setting_item_bg"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/parastoo"
+                        android:gravity="center"
+                        android:text="فروشگاه"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@mipmap/ic_coin" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

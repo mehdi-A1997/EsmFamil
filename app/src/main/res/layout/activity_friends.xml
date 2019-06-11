@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.FriendsActivity"
+    tools:context=".activity.FriendsActivity"
     android:background="@drawable/main_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/samim"
-            android:text="افزودن دوست"
+            android:text="جستجو دوست"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -40,7 +40,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="120dp"
-            android:src="@mipmap/ic_start"
+            android:src="@mipmap/ic_addfriend"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +75,7 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="120dp"
-                android:src="@mipmap/ic_start"
+                android:src="@mipmap/ic_setting"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

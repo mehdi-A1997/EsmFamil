@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ProfileActivity"
+    tools:context=".activity.ProfileActivity"
     android:background="@drawable/main_bg">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -87,15 +87,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_username" />
 
-    <ImageView
-        android:id="@+id/profile_name_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileEditDiv1" />
+        <ImageView
+            android:id="@+id/profile_name_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="53dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileEditDiv1" />
 
     <EditText
         android:id="@+id/profile_name"
