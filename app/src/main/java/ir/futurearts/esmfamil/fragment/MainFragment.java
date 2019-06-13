@@ -185,13 +185,15 @@ public class MainFragment extends Fragment {
 
         SharedPreferences firstPref = getActivity().getSharedPreferences("first", Context.MODE_PRIVATE);
         SharedPreferences.Editor firstEditor= firstPref.edit();
-        if(firstPref.getBoolean("main", true)){
-            Intent intent= new Intent(getContext(), HelpActivity.class);
-            intent.putExtra("type", 0);
-            startActivity(intent);
+        if(CurrentUser.isLogin()){
+            if(firstPref.getBoolean("main", true)){
+                Intent intent= new Intent(getContext(), HelpActivity.class);
+                intent.putExtra("type", 0);
+                startActivity(intent);
 
-            firstEditor.putBoolean("main", false);
-            firstEditor.apply();
+                firstEditor.putBoolean("main", false);
+                firstEditor.apply();
+            }
         }
 
 

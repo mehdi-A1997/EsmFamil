@@ -43,6 +43,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.accounts.AccountManager.ERROR_CODE_NETWORK_ERROR;
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_FIRST_USER;
 import static android.app.Activity.RESULT_OK;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
@@ -267,8 +269,8 @@ public class ResultFragment extends Fragment implements GameInterface {
                 acceptGame(1);
 
             }
-            else {
-                acceptGame(6);
+            else if(resultCode == RESULT_FIRST_USER){
+                    acceptGame(6);
             }
         }
 

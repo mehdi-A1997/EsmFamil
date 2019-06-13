@@ -52,4 +52,9 @@ public class LoginActivity extends AppCompatActivity implements LoginInterface {
             changeFragment(1);
         }
     }
+
+    @Override
+    public void Finish(){
+        finish();
+    }
 }

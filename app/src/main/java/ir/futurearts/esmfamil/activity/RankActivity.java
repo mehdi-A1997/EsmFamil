@@ -38,9 +38,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.accounts.AccountManager.ERROR_CODE_NETWORK_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class RankActivity extends AppCompatActivity implements AddFriendInterface {
 
@@ -74,7 +75,7 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
 
         progress.start();
 
-        Call<FriendsResponse> call= RetrofitClient
+        final Call<FriendsResponse> call= RetrofitClient
                 .getInstance()
                 .getUserApi()
                 .getRank();
@@ -142,6 +143,9 @@ public class RankActivity extends AppCompatActivity implements AddFriendInterfac
                     case ERROR_CODE_NETWORK_ERROR:
                         Log.d("MM", "The ad request was unsuccessful due to network connectivity. ");
                         break;
+
+                    case ERROR_CODE_NO_FILL:
+                        Log.d("MM", "The ad request was successful, but no ad was returned due to lack of ad inventory.");
                     default:
                         Log.d("MM", "Faild to Load:"+ errorCode);
                 }

@@ -86,6 +86,8 @@ public class DialogActivity extends AppCompatActivity {
         finish();
     }
     public void noDialog(View view){
+        Intent i=new Intent();
+        setResult(RESULT_FIRST_USER,i);
         finish();
     }
 
