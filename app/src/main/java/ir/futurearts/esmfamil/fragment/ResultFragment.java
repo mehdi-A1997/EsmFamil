@@ -16,9 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.victor.loading.newton.NewtonCradleLoading;
 import java.io.IOException;
@@ -37,17 +35,15 @@ import ir.futurearts.esmfamil.network.Responses.GamesResponse;
 import ir.futurearts.esmfamil.network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.utils.DialogActivity;
+import ir.tapsell.sdk.bannerads.TapsellBannerType;
+import ir.tapsell.sdk.bannerads.TapsellBannerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.accounts.AccountManager.ERROR_CODE_NETWORK_ERROR;
-import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_FIRST_USER;
 import static android.app.Activity.RESULT_OK;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,10 +76,7 @@ public class ResultFragment extends Fragment implements GameInterface {
         RecyclerView list = v.findViewById(R.id.result_rv);
         empty= v.findViewById(R.id.result_empty);
         progress= v.findViewById(R.id.result_progress);
-        AdView mAdView = v.findViewById(R.id.resultadView);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         data= new LinkedList<>();
         adapter= new GameAdapter(data, getContext(), this);
@@ -103,60 +96,9 @@ public class ResultFragment extends Fragment implements GameInterface {
             firstEditor.apply();
         }
 
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                Log.d("MM", "LOADED");
-            }
+        TapsellBannerView banner1 = v.findViewById(R.id.banner2);
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-                Log.d("MM", "Faild to Load:"+ errorCode);
-                switch (errorCode) {
-                    case ERROR_CODE_INTERNAL_ERROR:
-                        Log.d("MM", "Something happened internally; for instance, an invalid response was received from the ad server. ");
-                        break;
-
-                    case ERROR_CODE_INVALID_REQUEST:
-                        Log.d("MM", "The ad request was invalid; for instance, the ad unit ID was incorrect. ");
-                        break;
-
-                    case ERROR_CODE_NETWORK_ERROR:
-                        Log.d("MM", "The ad request was unsuccessful due to network connectivity. ");
-                        break;
-                        default:
-                            Log.d("MM", "Faild to Load:"+ errorCode);
-                }
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                Log.d("MM", "opened");
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-                Log.d("MM", "clicked");
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-                Log.d("MM", "left");
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-                Log.d("MM", "closed");
-            }
-        });
+        banner1.loadAd(getContext(), "5d14ef92d4d0e90001a00e2d", TapsellBannerType.BANNER_320x50);
         return v;
     }
 
@@ -254,6 +196,7 @@ public class ResultFragment extends Fragment implements GameInterface {
     public void CompleteDetail(GameM g) {
         Intent intent= new Intent(getContext(), GameResultActivity.class);
         intent.putExtra("id", g.getId()+"");
+        intent.putExtra("letter", g.getLetter());
         intent.putExtra("uid", g.getUid()+"");
         intent.putExtra("oid", g.getOid()+"");
 

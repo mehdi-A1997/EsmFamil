@@ -5,11 +5,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.adapter.ImageAdapter;
 import ir.futurearts.esmfamil.interfaces.ImageInterface;
@@ -20,6 +23,11 @@ public class ChangeImageActivity extends AppCompatActivity implements ImageInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_change_image);
 
         RecyclerView list = findViewById(R.id.images_rv);

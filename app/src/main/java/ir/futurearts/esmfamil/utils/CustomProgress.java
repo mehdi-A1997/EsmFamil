@@ -2,9 +2,12 @@ package ir.futurearts.esmfamil.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import com.victor.loading.newton.NewtonCradleLoading;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import ir.futurearts.esmfamil.R;
@@ -26,6 +29,11 @@ public class CustomProgress {
         // no tile for the dialog
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.progress_dialog);
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         NewtonCradleLoading p=mDialog.findViewById(R.id.newton_cradle_loading);
         //p.setLoadingColor(R.color.colorAccent);
         p.start();

@@ -3,7 +3,11 @@ package ir.futurearts.esmfamil.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.fragment.singing.LoginFragment;
 import ir.futurearts.esmfamil.fragment.singing.SignUpFragment;
@@ -16,6 +20,11 @@ public class LoginActivity extends AppCompatActivity implements LoginInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_login);
 
         changeFragment(1);

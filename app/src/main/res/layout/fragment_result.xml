@@ -6,18 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.ResultFragment"
     android:background="@drawable/main_bg">
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/resultadView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:layout_constraintStart_toStartOf="parent"
-        ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintTop_toTopOf="parent"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-1398806565081490/1473213324">
-    </com.google.android.gms.ads.AdView>
 
+    <ir.tapsell.sdk.bannerads.TapsellBannerView
+        android:id="@+id/banner2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:tapsell_banner_type="banner_320x50"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/result_rv"
@@ -26,7 +24,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/resultadView"
+        app:layout_constraintTop_toBottomOf="@id/banner2"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <LinearLayout

@@ -7,19 +7,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.transition.Explode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,6 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -39,14 +40,16 @@ import ir.futurearts.esmfamil.fragment.SettingFragment;
 import ir.futurearts.esmfamil.network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.utils.CurvedBottomView;
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
+import ir.tapsell.sdk.TapsellAdShowListener;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -55,13 +58,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private RelativeLayout lin_id;
     private float diff=0, origin=0;
     public CurvedBottomView nav;
-
+    private Locale locale = null;
     private static String TOPIC_GLOBAL= "global";
-    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Configuration config = getBaseContext().getResources().getConfiguration();
+
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_main);
 
         setupTransition();
@@ -109,63 +118,39 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     }
                 });
 
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-1398806565081490/7847049989");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
-        mInterstitialAd.setAdListener(new AdListener() {
+        TapsellAdRequestOptions options= new TapsellAdRequestOptions();
+        options.setCacheType(TapsellAdRequestOptions.CACHE_TYPE_CACHED);
+        Tapsell.requestAd(this, "5d14f4cd40878d000135e688", options, new TapsellAdRequestListener() {
             @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                int n= new Random().nextInt(20);
-                Log.d("MM", n+"");
-                if(n%2 == 0 && n>=10)
-                    mInterstitialAd.show();
-
+            public void onError (String error)
+            {
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-                switch (errorCode) {
-                    case ERROR_CODE_INTERNAL_ERROR:
-                        Log.d("MM", "Something happened internally; for instance, an invalid response was received from the ad server. ");
-                        break;
-
-                    case ERROR_CODE_INVALID_REQUEST:
-                        Log.d("MM", "The ad request was invalid; for instance, the ad unit ID was incorrect. ");
-                        break;
-
-                    case ERROR_CODE_NETWORK_ERROR:
-                        Log.d("MM", "The ad request was unsuccessful due to network connectivity. ");
-                        break;
-
-                    default:
-                        Log.d("MM", "Faild to Load:"+ errorCode);
+            public void onAdAvailable (TapsellAd ad)
+            {
+                int rand= new Random().nextInt(20);
+                if(rand %2 == 0 && rand>=12){
+                    ad.show(MainActivity.this,null);
                 }
             }
 
             @Override
-            public void onAdOpened() {
-                // Code to be executed when the ad is displayed.
+            public void onNoAdAvailable ()
+            {
             }
 
             @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
+            public void onNoNetwork ()
+            {
             }
 
             @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the interstitial ad is closed.
+            public void onExpiring (TapsellAd ad)
+            {
             }
         });
-
     }
 
     private void draw() {
@@ -340,5 +325,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         explode.setDuration(1000);
         getWindow().setEnterTransition(explode);
     }
+    private static boolean updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
 
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
 }

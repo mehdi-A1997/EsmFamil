@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.adapter.ItemAdapter;
 import ir.futurearts.esmfamil.module.ItemM;
@@ -20,6 +23,11 @@ public class GameDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_game_details);
 
         RecyclerView list = findViewById(R.id.gamedetails_rv);

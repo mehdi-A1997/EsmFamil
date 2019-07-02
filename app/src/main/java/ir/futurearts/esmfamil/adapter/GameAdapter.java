@@ -102,7 +102,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.myHolder> {
         public void set(final GameM g, final int pos) {
 
             String myDate = g.getTimestamp();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             Date dt = null;
             try {
                 dt = sdf.parse(myDate);

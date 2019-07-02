@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
+
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.constant.CurrentUser;
@@ -43,6 +46,11 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_profile);
 
         setupTransition();

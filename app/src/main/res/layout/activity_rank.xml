@@ -17,7 +17,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/rankadView"
+        app:layout_constraintBottom_toTopOf="@id/banner1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -58,15 +58,14 @@
             android:text="اطلاعاتی  موجود نیست"/>
     </LinearLayout>
 
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/rankadView"
-        android:layout_width="wrap_content"
+    <ir.tapsell.sdk.bannerads.TapsellBannerView
+        android:id="@+id/banner1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        ads:layout_constraintStart_toStartOf="parent"
-        ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintBottom_toBottomOf="parent"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-1398806565081490/1362055778">
-    </com.google.android.gms.ads.AdView>
+        app:tapsell_banner_type="banner_320x50"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

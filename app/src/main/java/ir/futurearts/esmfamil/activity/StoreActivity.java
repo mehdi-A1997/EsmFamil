@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -15,6 +17,7 @@ import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.adapter.StoreAdapter;
 import ir.futurearts.esmfamil.constant.CurrentUser;
@@ -43,6 +46,11 @@ public class StoreActivity extends AppCompatActivity implements StoreInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_store);
 
         RecyclerView list = findViewById(R.id.store_rv);

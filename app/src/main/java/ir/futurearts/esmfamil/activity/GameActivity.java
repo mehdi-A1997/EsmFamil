@@ -7,23 +7,23 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +34,10 @@ import ir.futurearts.esmfamil.network.RetrofitClient;
 import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.utils.CustomProgress;
 import ir.futurearts.esmfamil.utils.DialogActivity;
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -45,8 +49,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.accounts.AccountManager.ERROR_CODE_NETWORK_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -61,8 +63,6 @@ public class GameActivity extends AppCompatActivity {
     private Button sendbtn;
 
     private int GID;
-
-    private InterstitialAd mInterstitialAd;
     private CountDownTimer cdt;
     private int type= 0;
     private CustomProgress customProgress;
@@ -72,13 +72,18 @@ public class GameActivity extends AppCompatActivity {
     private boolean isFirst = true;
     private boolean surended = false;
     private ItemsM itemsM;
-
+    private TapsellAd gameAd;
     private final int RESULT_CODE = 1001;
     private final int EXIT_CODE = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_game);
 
         tname= findViewById(R.id.category_name);
@@ -214,64 +219,37 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-        setAd();
-    }
-
-    private void setAd() {
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-1398806565081490/7847049989");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mInterstitialAd.setAdListener(new AdListener() {
+        TapsellAdRequestOptions options= new TapsellAdRequestOptions();
+        options.setCacheType(TapsellAdRequestOptions.CACHE_TYPE_CACHED);
+        Tapsell.requestAd(this, "5d14f4cd40878d000135e688", options, new TapsellAdRequestListener() {
             @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-
-
+            public void onError (String error)
+            {
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-                switch (errorCode) {
-                    case ERROR_CODE_INTERNAL_ERROR:
-                        Log.d("MM", "Something happened internally; for instance, an invalid response was received from the ad server. ");
-                        break;
-
-                    case ERROR_CODE_INVALID_REQUEST:
-                        Log.d("MM", "The ad request was invalid; for instance, the ad unit ID was incorrect. ");
-                        break;
-
-                    case ERROR_CODE_NETWORK_ERROR:
-                        Log.d("MM", "The ad request was unsuccessful due to network connectivity. ");
-                        break;
-
-                    default:
-                        Log.d("MM", "Faild to Load:"+ errorCode);
-                }
+            public void onAdAvailable (TapsellAd ad)
+            {
+                gameAd= ad;
             }
 
             @Override
-            public void onAdOpened() {
-                // Code to be executed when the ad is displayed.
+            public void onNoAdAvailable ()
+            {
             }
 
             @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
+            public void onNoNetwork ()
+            {
             }
 
             @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the interstitial ad is closed.
+            public void onExpiring (TapsellAd ad)
+            {
             }
         });
     }
+
 
 
     private void setSocket() {
@@ -384,9 +362,7 @@ public class GameActivity extends AppCompatActivity {
                 if(response.code() == 200){
                    int rand= new Random().nextInt(20);
                    if(rand %2 == 0 && rand>=10){
-                       if(mInterstitialAd.isLoaded()){
-                           mInterstitialAd.show();
-                       }
+                      gameAd.show(GameActivity.this, null);
                    }
                     if(type == 0){
                         Intent intent= new Intent();

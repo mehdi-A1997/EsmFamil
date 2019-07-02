@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -55,6 +57,11 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_complete_game_creation);
 
         data= getIntent().getExtras();
@@ -109,7 +116,7 @@ public class CompleteGameCreationActivity extends AppCompatActivity implements S
 
         final String oid= data.getString("oid");
         String uid= CurrentUser.getId();
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date());
         Call<CreateGameResponse> call= RetrofitClient.getInstance()
                 .getGameApi().CreateGameWithFriends(uid, oid, type, letter, items, timeStamp);
 

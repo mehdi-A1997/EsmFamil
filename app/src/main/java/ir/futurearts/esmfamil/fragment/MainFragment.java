@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -52,6 +54,13 @@ import ir.futurearts.esmfamil.R;
 import ir.futurearts.esmfamil.utils.CustomProgress;
 import ir.futurearts.esmfamil.utils.DialogActivity;
 import ir.futurearts.esmfamil.utils.OptionsActivity;
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
+import ir.tapsell.sdk.TapsellAdShowListener;
+import ir.tapsell.sdk.TapsellRewardListener;
+import ir.tapsell.sdk.TapsellShowOptions;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,11 +75,13 @@ public class MainFragment extends Fragment {
 
     private TextView coin,score;
     private CircleImageView uimg;
+    private SharedPreferences userPref;
     private SharedPreferences.Editor userEditor;
 
     private final int NORMAL_CODE = 1001;
     private final int NORMALRANDOM_GAME = 1002;
     private final int COIN_CODE = 1003;
+    private final int STORE_CODE= 1004;
 
 
     public MainFragment() {
@@ -96,7 +107,7 @@ public class MainFragment extends Fragment {
         CircleImageView coin_ic = v.findViewById(R.id.coin_ic);
         ImageView utility = v.findViewById(R.id.main_help);
 
-        SharedPreferences userPref = Objects.requireNonNull(getActivity()).getSharedPreferences("user", Context.MODE_PRIVATE);
+        userPref = Objects.requireNonNull(getActivity()).getSharedPreferences("user", Context.MODE_PRIVATE);
         userEditor= userPref.edit();
         try {
             uimg.setImageDrawable(getDrawableByName(CurrentUser.getImg()));
@@ -210,7 +221,13 @@ public class MainFragment extends Fragment {
     }
 
     private void openStore() {
-        startActivityForResult(new Intent(getContext(), StoreActivity.class), COIN_CODE);
+
+        Intent intent = new Intent(getContext(), OptionsActivity.class);
+        String[] data = new String[]{"خرید سکه", "تماشای ویدیو"};
+        intent.putExtra("list", data);
+
+        startActivityForResult(intent, STORE_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 
     private void getmyScore() {
@@ -282,6 +299,67 @@ public class MainFragment extends Fragment {
             }
         }
 
+        if(requestCode == STORE_CODE){
+            if(resultCode == RESULT_OK){
+                int item= Integer.parseInt(data.getStringExtra("item"));
+                switch (item){
+                    case 0:
+                        startActivityForResult(new Intent(getContext(), StoreActivity.class), COIN_CODE);
+                        break;
+
+                    case 1:
+                        TapsellAdRequestOptions options= new TapsellAdRequestOptions();
+                        options.setCacheType(TapsellAdRequestOptions.CACHE_TYPE_STREAMED);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+                        Date date = new Date();
+                        final String dt=dateFormat.format(date);
+
+                        if(userPref.getString("lastreward","-1").equals(dt)){
+                            FancyToast.makeText(getContext(),"شما جایزه امروز را دریافت کرده اید", FancyToast.LENGTH_LONG,
+                                    FancyToast.ERROR, false).show();
+                            return;
+                        }
+                        Tapsell.requestAd(getContext(), "5d14f58140878d000135e689", options, new TapsellAdRequestListener() {
+                            @Override
+                            public void onError (String error)
+                            {
+                            }
+
+                            @Override
+                            public void onAdAvailable (TapsellAd ad)
+                            {
+                                TapsellShowOptions showOptions= new TapsellShowOptions();
+                                showOptions.setShowDialog(true);
+                                ad.show(getContext(), showOptions);
+                            }
+
+                            @Override
+                            public void onNoAdAvailable ()
+                            {
+                            }
+
+                            @Override
+                            public void onNoNetwork ()
+                            {
+                            }
+
+                            @Override
+                            public void onExpiring (TapsellAd ad)
+                            {
+                            }
+                        });
+
+                        Tapsell.setRewardListener(new TapsellRewardListener() {
+                            @Override
+                            public void onAdShowFinished(TapsellAd ad, boolean completed) {
+                                buyCredit(25, dt);
+                            }
+                        });
+                        break;
+                }
+            }
+        }
+
     }
 
 
@@ -294,7 +372,7 @@ public class MainFragment extends Fragment {
     private void createRandomGameNormal() {
         final CustomProgress customProgress= new CustomProgress();
         customProgress.showProgress(getContext(), false);
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date());
         Call<CreateGameResponse> call= RetrofitClient.getInstance()
                 .getGameApi().CreateRandomGame(CurrentUser.getId(), 0, timeStamp);
 
@@ -360,6 +438,33 @@ public class MainFragment extends Fragment {
         Resources resources = getResources();
         final int resourceId = resources.getIdentifier(name, "drawable", Objects.requireNonNull(getContext()).getPackageName());
         return ContextCompat.getDrawable(getContext(),resourceId);
+    }
+
+    private void buyCredit(final int count, final String dt) {
+       final CustomProgress progress= new CustomProgress();
+        progress.showProgress(getContext(), false);
+        Call<ResponseBody> call= RetrofitClient.getInstance()
+                .getUserApi().addCoin(CurrentUser.getId(), count);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                progress.hideProgress();
+                if(response.code() == 200){
+                    userEditor.putString("lastreward",dt);
+                    userEditor.apply();
+                    getmyScore();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                Log.d("MM", t.getMessage()+"");
+                FancyToast.makeText(getContext(), getString(R.string.systemError),
+                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                progress.hideProgress();
+            }
+        });
     }
 
 }

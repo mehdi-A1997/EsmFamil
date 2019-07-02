@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -13,6 +15,7 @@ import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.adapter.FriendRequestAdapter;
 import ir.futurearts.esmfamil.constant.CurrentUser;
@@ -33,6 +36,11 @@ public class FriendRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_friend_request);
 
         RecyclerView list = findViewById(R.id.friendrequest_rv);

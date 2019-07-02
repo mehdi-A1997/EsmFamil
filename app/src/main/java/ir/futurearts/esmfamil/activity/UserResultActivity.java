@@ -7,9 +7,12 @@ import androidx.core.content.ContextCompat;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.futurearts.esmfamil.constant.CurrentUser;
@@ -28,6 +31,11 @@ public class UserResultActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_user_result);
 
         win= findViewById(R.id.userresult_win);

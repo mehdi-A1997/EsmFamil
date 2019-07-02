@@ -2,11 +2,15 @@ package ir.futurearts.esmfamil.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import ir.futurearts.esmfamil.R;
 
@@ -26,7 +30,7 @@ public class HelpActivity extends AppCompatActivity {
             "    در صورت تساوی فقط 5 امتیاز به شما تعلق میگیرد <br/>\n" +
             " در صورت باخت 5 امتیاز از شما کسر میگردد</p>\n" +
             "        <hr/>"
-            +"<p> نکته: امتیاز دهی در بازی های رقابتی با ضریب 2 صورت میگیرد </p>";
+            +"";
 
     private final String help2= "<h2><u>راهنما</u></h2>\n" +
             "    <p>برای مشاهده جزییات بازی بازی مورد نظر را لمس کرده و نگه دارید.<br/>\n" +
@@ -40,6 +44,11 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale("en"));
+        res.updateConfiguration(conf, dm);
         setContentView(R.layout.activity_help);
 
         int type= getIntent().getIntExtra("type", 0);

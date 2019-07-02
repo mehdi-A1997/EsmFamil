@@ -5,11 +5,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 
 import io.fabric.sdk.android.Fabric;
 import ir.futurearts.esmfamil.constant.CurrentUser;
+import ir.tapsell.sdk.Tapsell;
 
 public class EsmFamil extends Application {
     private SharedPreferences.Editor editor;
@@ -17,9 +17,9 @@ public class EsmFamil extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Tapsell.initialize(this, "cfektnihpncqeigiqmqjihqoaeoqabqnsqdmcohftmqoqgkrmtaacgrpcolafrjeqlehil");
         FirebaseApp.initializeApp(this);
         Fabric.with(this, new Crashlytics());
-        MobileAds.initialize(this, "ca-app-pub-1398806565081490~4957685858");
         SharedPreferences mPref = getSharedPreferences("user", MODE_PRIVATE);
         editor= mPref.edit();
 
